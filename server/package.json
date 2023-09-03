@@ -1,6 +1,9 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=14.20.1"
+  },
   "author": "Om Patel",
   "description": "Modern MERN Stack Dashboard",
   "keywords": [
