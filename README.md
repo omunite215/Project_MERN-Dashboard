@@ -67,26 +67,9 @@ PORT=5001
 
 **NOTE:** While running deployed version, it might take some time to load first time on render. [Learn more](https://render.com/docs/free#other-limitations "Learn More")
 
-## :camera: Screenshots:
-
-![Modern UI/UX](/.github/images/img1.png "Modern UI/UX")
-
-![Fulfilled with Features](/.github/images/img2.png "Fulfilled with Features")
-
-![Geography Data](/.github/images/img3.png "Geography Data")
-
-![Server Side Pagination](/.github/images/img4.png "Server Side Pagination")
-
-![Different Charts](/.github/images/img5.png "Different Charts")
-
 ## :gear: Built with
 
 [![React JS](https://skillicons.dev/icons?i=react)](https://react.dev/ "React JS") [![Node JS](https://skillicons.dev/icons?i=nodejs)](https://nodejs.org/ "Node JS") [![MongoDB](https://skillicons.dev/icons?i=mongodb)](https://mongodb.com/ "MongoDB") [![Material UI](https://skillicons.dev/icons?i=materialui)](https://mui.com/ "Material UI") [![React Redux](https://skillicons.dev/icons?i=redux)](https://redux.js.org/ "React Redux")
-
-## :wrench: Stats
-
-[![Stats for this App](/.github/images/stats.svg)](https://pagespeed.web.dev/ "Stats for this App")
-
 
 ## :star: Give A Star
 
@@ -158,3 +141,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+<p align="center">
+  <img src="https://github.com/omunite215/hoobank/assets/78680563/eed23408-14a8-4d04-82b6-6d982f1dcca7" alt="Om's Logo Image"/>
+</p>
