@@ -67,18 +67,6 @@ PORT=5001
 
 **NOTE:** While running deployed version, it might take some time to load first time on render. [Learn more](https://render.com/docs/free#other-limitations "Learn More")
 
-## :camera: Screenshots:
-
-![Modern UI/UX](/.github/images/img1.png "Modern UI/UX")
-
-![Fulfilled with Features](/.github/images/img2.png "Fulfilled with Features")
-
-![Geography Data](/.github/images/img3.png "Geography Data")
-
-![Server Side Pagination](/.github/images/img4.png "Server Side Pagination")
-
-![Different Charts](/.github/images/img5.png "Different Charts")
-
 ## :gear: Built with
 
 [![React JS](https://skillicons.dev/icons?i=react)](https://react.dev/ "React JS") [![Node JS](https://skillicons.dev/icons?i=nodejs)](https://nodejs.org/ "Node JS") [![MongoDB](https://skillicons.dev/icons?i=mongodb)](https://mongodb.com/ "MongoDB") [![Material UI](https://skillicons.dev/icons?i=materialui)](https://mui.com/ "Material UI") [![React Redux](https://skillicons.dev/icons?i=redux)](https://redux.js.org/ "React Redux")
