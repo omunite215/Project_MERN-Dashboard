@@ -83,11 +83,6 @@ PORT=5001
 
 [![React JS](https://skillicons.dev/icons?i=react)](https://react.dev/ "React JS") [![Node JS](https://skillicons.dev/icons?i=nodejs)](https://nodejs.org/ "Node JS") [![MongoDB](https://skillicons.dev/icons?i=mongodb)](https://mongodb.com/ "MongoDB") [![Material UI](https://skillicons.dev/icons?i=materialui)](https://mui.com/ "Material UI") [![React Redux](https://skillicons.dev/icons?i=redux)](https://redux.js.org/ "React Redux")
 
-## :wrench: Stats
-
-[![Stats for this App](/.github/images/stats.svg)](https://pagespeed.web.dev/ "Stats for this App")
-
-
 ## :star: Give A Star
 
 You can also give this repository a star to show more people and they can use this repository.
