@@ -36,7 +36,7 @@ import salesRoutes from "./routes/sales.js";
 */
 
 // Configuration
-dotenv.config();
+dotenv.config({path: './.env'});
 const app = express();
 app.use(express.json());
 app.use(rateLimiter);
