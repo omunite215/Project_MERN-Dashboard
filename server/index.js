@@ -16,8 +16,7 @@ import managementRoutes from "./routes/management.js";
 import salesRoutes from "./routes/sales.js";
 
 // Data imports
-/*
-  ******************************************************
+
     import User from "./models/User.js";
     import Product from "./models/Product.js";
     import ProductStat from "./models/ProductStat.js";
@@ -32,11 +31,10 @@ import salesRoutes from "./routes/sales.js";
       dataOverallStat,
       dataAffiliateStat,
     } from "./data/index.js";
-  ******************************************************
-*/
+  
 
 // Configuration
-dotenv.config({path: './.env'});
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(rateLimiter);
@@ -64,15 +62,13 @@ mongoose
     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
     // Only run first time when running app to insert data into mongodb
-    /**
-      ***********************************************
+    
         User.insertMany(dataUser);
         Product.insertMany(dataProduct);
         ProductStat.insertMany(dataProductStat);
         Transaction.insertMany(dataTransaction);
         OverallStat.insertMany(dataOverallStat);
         AffiliateStat.insertMany(dataAffiliateStat);
-      ***********************************************
-    */
+      
   })
   .catch((error) => console.log(`${error} did not connect.`));
