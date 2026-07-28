@@ -1,42 +1,46 @@
 {
   "name": "server",
-  "version": "1.0.0",
-  "engines": {
-    "node": ">=14.20.1"
-  },
+  "version": "2.0.0",
   "author": "Om Patel",
-  "description": "Modern MERN Stack Dashboard",
-  "keywords": [
-    "reactjs",
-    "react",
-    "admin-app",
-    "mern",
-    "mongodb",
-    "modern-ui/ux",
-    "js",
-    "javascript",
-    "html",
-    "css"
-  ],
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
-  },
+  "description": "TypeScript Express API for the MERN Dashboard",
   "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "seed": "tsx src/data/seed.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint src"
+  },
   "dependencies": {
-    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "country-iso-2-to-3": "^1.1.0",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "express-rate-limit": "^6.7.0",
-    "helmet": "^6.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
     "lodash": "^4.17.21",
-    "mongoose": "^7.3.3",
+    "mongoose": "^8.5.0",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.21"
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/lodash": "^4.17.7",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^22.0.0",
+    "@types/supertest": "^6.0.2",
+    "mongodb-memory-server": "^10.0.0",
+    "oxlint": "^0.9.0",
+    "supertest": "^7.0.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
   }
 }
