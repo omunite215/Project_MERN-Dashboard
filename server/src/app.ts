@@ -7,6 +7,7 @@ import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
 import clientRouter from "./routes/client.js";
 import generalRouter from "./routes/general.js";
+import managementRouter from "./routes/management.js";
 
 export function createApp(options: { clientOrigin?: string } = {}): Express {
   const app = express();
@@ -22,6 +23,7 @@ export function createApp(options: { clientOrigin?: string } = {}): Express {
 
   app.use("/client", clientRouter);
   app.use("/general", generalRouter);
+  app.use("/management", managementRouter);
   // ROUTES-MOUNT-POINT (routers mounted here in Tasks 1.10–1.11)
 
   app.use(notFound);
