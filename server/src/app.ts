@@ -10,7 +10,7 @@ import generalRouter from "./routes/general.js";
 import managementRouter from "./routes/management.js";
 import salesRouter from "./routes/sales.js";
 
-export function createApp(options: { clientOrigin?: string } = {}): Express {
+export function createApp(options: { clientOrigin?: string | string[] } = {}): Express {
   const app = express();
 
   app.use(express.json());
