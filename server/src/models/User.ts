@@ -1,4 +1,4 @@
-import { prop, getModelForClass, modelOptions, pre, type DocumentType, Severity } from "@typegoose/typegoose";
+import { prop, getModelForClass, modelOptions, pre, type DocumentType } from "@typegoose/typegoose";
 
 export const ROLES = ["user", "admin", "superadmin"] as const;
 export type Role = (typeof ROLES)[number];
@@ -7,7 +7,7 @@ export type Role = (typeof ROLES)[number];
   if (!this.isModified("password") || !this.password) return;
   this.password = await Bun.password.hash(this.password); // argon2id (Bun default)
 })
-@modelOptions({ schemaOptions: { timestamps: true }, options: { allowMixed: Severity.ALLOW } })
+@modelOptions({ schemaOptions: { timestamps: true } })
 export class User {
   @prop({ required: true }) public name!: string;
   @prop({ required: true, unique: true }) public email!: string;
@@ -18,7 +18,7 @@ export class User {
   @prop() public occupation?: string;
   @prop() public phoneNumber?: string;
   @prop({ type: () => [String], default: [] }) public transactions?: string[];
-  @prop({ enum: ROLES, default: "user" }) public role!: Role;
+  @prop({ type: String, enum: ROLES, default: "user" }) public role!: Role;
   @prop({ default: 0 }) public tokenVersion!: number;
 
   public async comparePassword(this: DocumentType<User>, candidate: string): Promise<boolean> {
