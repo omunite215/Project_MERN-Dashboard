@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "bun:test";
 import { parseEnv } from "../src/config/env.js";
 
 describe("parseEnv", () => {

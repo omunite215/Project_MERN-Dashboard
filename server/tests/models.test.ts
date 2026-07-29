@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "bun:test";
 import User from "../src/models/User.js";
 import Transaction from "../src/models/Transaction.js";
 

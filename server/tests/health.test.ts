@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "bun:test";
 import request from "supertest";
 import { connectTestDB, closeTestDB, makeApp } from "./helpers/testApp.js";
 

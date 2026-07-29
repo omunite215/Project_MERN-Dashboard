@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from "bun:test";
 import request from "supertest";
 import mongoose from "mongoose";
 import { connectTestDB, closeTestDB, makeApp } from "./helpers/testApp.js";

@@ -1,5 +1,4 @@
 import getCountryISO3 from "country-iso-2-to-3";
-import _ from "lodash";
 import type { Request, Response } from "express";
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import { transactionQuerySchema } from "../validation/transaction.js";
@@ -12,7 +11,11 @@ export const getProducts = asyncHandler(async (_req: Request, res: Response) => 
   const products = await Product.find().lean();
   const ids = products.map((p) => String(p._id));
   const stats = await ProductStat.find({ productId: { $in: ids } }).lean();
-  const byProduct = _.groupBy(stats, "productId");
+  const byProduct = stats.reduce<Record<string, typeof stats>>((acc, s) => {
+    const key = String(s.productId);
+    (acc[key] ??= []).push(s);
+    return acc;
+  }, {});
   const withStats = products.map((p) => ({ ...p, stat: byProduct[String(p._id)] ?? [] }));
   res.status(200).json(withStats);
 });
@@ -24,7 +27,7 @@ export const getCustomers = asyncHandler(async (_req: Request, res: Response) =>
 
 export const getTransactions = asyncHandler(async (req: Request, res: Response) => {
   const { page, pageSize, sort, search } = transactionQuerySchema.parse(req.query);
-  const safeSearch = _.escapeRegExp(search);
+  const safeSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   // Search across cost, userId, and the stringified _id so a partial ID
   // (the most prominent column) also matches.
   const filter = {

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from "bun:test";
 import request from "supertest";
 import { connectTestDB, closeTestDB, makeApp } from "./helpers/testApp.js";
 import User from "../src/models/User.js";

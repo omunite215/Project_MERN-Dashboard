@@ -1,0 +1,8 @@
+# Runtime preload: the Bun-compat shim runs before any entry point loads
+# mongoose/bson (see src/bun-compat.ts). Covers `bun src/index.ts`, `bun
+# src/data/seed.ts`, `bun src/scripts/hashPasswords.ts`.
+preload = ["./src/bun-compat.ts"]
+
+[test]
+# Tests preload the shim (via setup.ts) plus reflect-metadata and JWT test secrets.
+preload = ["./tests/setup.ts"]

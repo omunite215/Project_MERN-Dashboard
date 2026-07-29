@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { env } from "../config/env.js";
 import { connectDB, disconnectDB } from "../config/db.js";
 import User from "../models/User.js";
