@@ -10,7 +10,7 @@ export function useLogin() {
   const setAuth = useAuthStore((s) => s.setAuth);
   return useMutation({
     mutationFn: (creds: { email: string; password: string }) =>
-      apiFetch<AuthResponse>("auth/login", { method: "POST", body: JSON.stringify(creds) }),
+      apiFetch<AuthResponse>("auth/login", { method: "POST", body: creds }),
     onSuccess: (data) => setAuth(data),
   });
 }
@@ -19,7 +19,7 @@ export function useRegister() {
   const setAuth = useAuthStore((s) => s.setAuth);
   return useMutation({
     mutationFn: (input: { name: string; email: string; password: string }) =>
-      apiFetch<AuthResponse>("auth/register", { method: "POST", body: JSON.stringify(input) }),
+      apiFetch<AuthResponse>("auth/register", { method: "POST", body: input }),
     onSuccess: (data) => setAuth(data),
   });
 }

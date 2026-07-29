@@ -23,25 +23,31 @@ function buildUrl(path: string, params?: Record<string, unknown>): string {
   return url.toString();
 }
 
+interface Options {
+  method?: string;
+  body?: unknown;
+  params?: Record<string, unknown>;
+}
+
 async function raw(
   path: string,
-  opts: RequestInit & { params?: Record<string, unknown> } = {},
-  token?: string | null,
+  opts: Options,
+  token: string | null,
 ): Promise<Response> {
-  const { params, ...fetchOpts } = opts;
-  const headers: Record<string, string> = {};
-  if (fetchOpts.body) headers["Content-Type"] = "application/json";
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  return fetch(buildUrl(path, params), {
-    ...fetchOpts,
+  return fetch(buildUrl(path, opts.params), {
+    method: opts.method ?? "GET",
     credentials: "include",
-    headers: { ...headers, ...(fetchOpts.headers as Record<string, string> | undefined) },
+    headers: {
+      ...(opts.body !== undefined ? { "Content-Type": "application/json" } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
   });
 }
 
 export async function apiFetch<T>(
   path: string,
-  opts: RequestInit & { params?: Record<string, unknown> } = {},
+  opts: Options = {},
 ): Promise<T> {
   let token = useAuthStore.getState().accessToken;
   let res = await raw(path, opts, token);
