@@ -12,38 +12,39 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import { type GridColDef } from "@mui/x-data-grid";
 import Header from "@/components/Header";
 import FlexBetween from "@/components/FlexBetween";
 import BreakdownChart from "@/components/BreakdownChart";
 import OverviewChart from "@/components/OverviewChart";
 import StatBox from "@/components/StatBox";
+import DataTable from "@/components/DataTable";
 import { useDashboard } from "@/api/queries";
 import type { Transaction } from "@/api/types";
+
+const columns: GridColDef<Transaction>[] = [
+  { field: "_id", headerName: "ID", flex: 1 },
+  { field: "userId", headerName: "User ID", flex: 0.5 },
+  { field: "createdAt", headerName: "Created At", flex: 1 },
+  {
+    field: "products",
+    headerName: "# of Products",
+    flex: 0.5,
+    sortable: false,
+    renderCell: (params) => (params.value as string[]).length,
+  },
+  {
+    field: "cost",
+    headerName: "Cost",
+    flex: 1,
+    renderCell: (params) => `$${Number(params.value).toFixed(2)}`,
+  },
+];
 
 export default function Dashboard() {
   const theme = useTheme();
   const isNonMediumScreen = useMediaQuery("(min-width: 1200px)");
   const { data, isLoading } = useDashboard();
-
-  const columns: GridColDef<Transaction>[] = [
-    { field: "_id", headerName: "ID", flex: 1 },
-    { field: "userId", headerName: "User ID", flex: 0.5 },
-    { field: "createdAt", headerName: "Created At", flex: 1 },
-    {
-      field: "products",
-      headerName: "# of Products",
-      flex: 0.5,
-      sortable: false,
-      renderCell: (params) => (params.value as string[]).length,
-    },
-    {
-      field: "cost",
-      headerName: "Cost",
-      flex: 1,
-      renderCell: (params) => `$${Number(params.value).toFixed(2)}`,
-    },
-  ];
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -139,10 +140,14 @@ export default function Dashboard() {
         />
 
         {/* ROW 2 */}
-        <Box
-          gridColumn="span 8"
-          gridRow="span 3"
-          sx={{
+        <DataTable
+          rows={data?.transactions ?? []}
+          columns={columns}
+          loading={isLoading || !data}
+          getRowId={(row) => row._id}
+          sxOverride={{
+            gridColumn: "span 8",
+            gridRow: "span 3",
             "& .MuiDataGrid-root": { border: "none", borderRadius: "5rem" },
             "& .MuiDataGrid-cell": { borderBottom: "none" },
             "& .MuiDataGrid-columnHeaders": {
@@ -162,14 +167,7 @@ export default function Dashboard() {
               color: `${theme.palette.secondary[200]} !important`,
             },
           }}
-        >
-          <DataGrid
-            loading={isLoading || !data}
-            getRowId={(row) => row._id}
-            rows={data?.transactions ?? []}
-            columns={columns}
-          />
-        </Box>
+        />
 
         <Box
           sx={{
