@@ -11,7 +11,7 @@ export const getAdmins = asyncHandler(async (_req: Request, res: Response) => {
 });
 
 export const getUserPerformance = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   if (!mongoose.isValidObjectId(id)) throw ApiError.badRequest("Invalid user id");
 
   const userWithStats = await User.aggregate([
