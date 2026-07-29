@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { rateLimiter } from "./middlewares/rateLimiter.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
+import clientRouter from "./routes/client.js";
 
 export function createApp(options: { clientOrigin?: string } = {}): Express {
   const app = express();
@@ -18,7 +19,8 @@ export function createApp(options: { clientOrigin?: string } = {}): Express {
 
   app.get("/health", (_req, res) => res.json({ status: "ok" }));
 
-  // ROUTES-MOUNT-POINT (routers mounted here in Tasks 1.8–1.11)
+  app.use("/client", clientRouter);
+  // ROUTES-MOUNT-POINT (routers mounted here in Tasks 1.9–1.11)
 
   app.use(notFound);
   app.use(errorHandler);
