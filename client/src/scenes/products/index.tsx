@@ -75,10 +75,10 @@ const ProductCard = ({
           <Typography>id: {_id}</Typography>
           <Typography>Supply Left: {supply}</Typography>
           <Typography>
-            Yearly Sales This Year: {stat[0].yearlySalesTotal}
+            Yearly Sales This Year: {stat[0]?.yearlySalesTotal}
           </Typography>
           <Typography>
-            Yearly Units Sold This Year: {stat[0].yearlyTotalSoldUnits}
+            Yearly Units Sold This Year: {stat[0]?.yearlyTotalSoldUnits}
           </Typography>
         </CardContent>
       </Collapsible>
