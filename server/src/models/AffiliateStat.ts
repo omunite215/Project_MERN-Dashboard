@@ -1,9 +1,10 @@
-import { prop, getModelForClass, modelOptions } from "@typegoose/typegoose";
+import { prop, getModelForClass, modelOptions, type Ref } from "@typegoose/typegoose";
 import { Types } from "mongoose";
+import { User } from "./User.js";
 
 @modelOptions({ schemaOptions: { timestamps: true } })
 export class AffiliateStat {
-  @prop() public userId?: Types.ObjectId; // TODO(1.3): switch to Ref<User> once User is a Typegoose class
+  @prop({ ref: () => User }) public userId?: Ref<User>;
   @prop({ type: () => [Types.ObjectId], default: [] }) public affiliateSales?: Types.ObjectId[];
 }
 
