@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { rateLimiter } from "./middlewares/rateLimiter.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
+import authRouter from "./routes/auth.js";
 import clientRouter from "./routes/client.js";
 import generalRouter from "./routes/general.js";
 import managementRouter from "./routes/management.js";
@@ -21,6 +22,8 @@ export function createApp(options: { clientOrigin?: string | string[] } = {}): E
   app.use(rateLimiter);
 
   app.get("/health", (_req, res) => res.json({ status: "ok" }));
+
+  app.use("/auth", authRouter);
 
   app.use("/client", clientRouter);
   app.use("/general", generalRouter);
