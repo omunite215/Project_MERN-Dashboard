@@ -1,7 +1,6 @@
-const { styled } = require("@mui/material");
-const { Box } = require("@mui/system");
+import { Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-// Flex Between
 const FlexBetween = styled(Box)({
   display: "flex",
   justifyContent: "space-between",

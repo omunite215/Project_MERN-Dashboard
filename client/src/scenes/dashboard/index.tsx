@@ -1,4 +1,3 @@
-import React from "react";
 import {
   DownloadOutlined,
   Email,
@@ -13,48 +12,30 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import Header from "@/components/Header";
+import FlexBetween from "@/components/FlexBetween";
+import BreakdownChart from "@/components/BreakdownChart";
+import OverviewChart from "@/components/OverviewChart";
+import StatBox from "@/components/StatBox";
+import { useDashboard } from "@/api/queries";
+import type { Transaction } from "@/api/types";
 
-import { useGetDashboardQuery } from "state/api";
-import {
-  FlexBetween,
-  Header,
-  BreakdownChart,
-  OverviewChart,
-  StatBox,
-} from "components";
-
-const Dashboard = () => {
-  // theme
+export default function Dashboard() {
   const theme = useTheme();
-  // is large desktop screen
   const isNonMediumScreen = useMediaQuery("(min-width: 1200px)");
-  // get data
-  const { data, isLoading } = useGetDashboardQuery();
+  const { data, isLoading } = useDashboard();
 
-  // data columns
-  const columns = [
-    {
-      field: "_id",
-      headerName: "ID",
-      flex: 1,
-    },
-    {
-      field: "userId",
-      headerName: "User ID",
-      flex: 0.5,
-    },
-    {
-      field: "createdAt",
-      headerName: "Created At",
-      flex: 1,
-    },
+  const columns: GridColDef<Transaction>[] = [
+    { field: "_id", headerName: "ID", flex: 1 },
+    { field: "userId", headerName: "User ID", flex: 0.5 },
+    { field: "createdAt", headerName: "Created At", flex: 1 },
     {
       field: "products",
       headerName: "# of Products",
       flex: 0.5,
       sortable: false,
-      renderCell: (params) => params.value.length,
+      renderCell: (params) => (params.value as string[]).length,
     },
     {
       field: "cost",
@@ -67,12 +48,8 @@ const Dashboard = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
-        {/* Header */}
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-
-        {/* Content */}
         <Box>
-          {/* Download Reports */}
           <Button
             sx={{
               backgroundColor: theme.palette.secondary.light,
@@ -80,7 +57,6 @@ const Dashboard = () => {
               fontSize: "14px",
               fontWeight: "bold",
               padding: "10px 20px",
-
               "&:hover": {
                 backgroundColor: theme.palette.background.alt,
                 color: theme.palette.secondary.light,
@@ -106,10 +82,9 @@ const Dashboard = () => {
         }}
       >
         {/* ROW 1 */}
-        {/* Total Customers */}
         <StatBox
           title="Total Customers"
-          value={data && data.totalCustomers}
+          value={data?.totalCustomers}
           increase="+14%"
           description="Since last month"
           icon={
@@ -118,11 +93,9 @@ const Dashboard = () => {
             />
           }
         />
-
-        {/* Sales Today */}
         <StatBox
           title="Sales Today"
-          value={data && data.todayStats.totalSales}
+          value={data?.todayStats.totalSales}
           increase="+21%"
           description="Since last month"
           icon={
@@ -131,22 +104,20 @@ const Dashboard = () => {
             />
           }
         />
-
-        {/* Overview Chart */}
         <Box
-          gridColumn="span 8"
-          gridRow="span 2"
-          backgroundColor={theme.palette.background.alt}
-          p="1rem"
-          borderRadius="0.55rem"
+          sx={{
+            gridColumn: "span 8",
+            gridRow: "span 2",
+            backgroundColor: theme.palette.background.alt,
+            p: "1rem",
+            borderRadius: "0.55rem",
+          }}
         >
           <OverviewChart view="sales" isDashboard={true} />
         </Box>
-
-        {/* Monthly Sales */}
         <StatBox
           title="Monthly Sales"
-          value={data && data.thisMonthStats.totalSales}
+          value={data?.thisMonthStats.totalSales}
           increase="+5%"
           description="Since last month"
           icon={
@@ -155,11 +126,9 @@ const Dashboard = () => {
             />
           }
         />
-
-        {/* Yearly Sales */}
         <StatBox
           title="Yearly Sales"
-          value={data && data.yearlySalesTotal}
+          value={data?.yearlySalesTotal}
           increase="+43%"
           description="Since last month"
           icon={
@@ -170,18 +139,12 @@ const Dashboard = () => {
         />
 
         {/* ROW 2 */}
-        {/* Transactions */}
         <Box
           gridColumn="span 8"
           gridRow="span 3"
           sx={{
-            "& .MuiDataGrid-root": {
-              border: "none",
-              borderRadius: "5rem",
-            },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "none",
-            },
+            "& .MuiDataGrid-root": { border: "none", borderRadius: "5rem" },
+            "& .MuiDataGrid-cell": { borderBottom: "none" },
             "& .MuiDataGrid-columnHeaders": {
               backgroundColor: theme.palette.background.alt,
               color: theme.palette.secondary[100],
@@ -203,30 +166,28 @@ const Dashboard = () => {
           <DataGrid
             loading={isLoading || !data}
             getRowId={(row) => row._id}
-            rows={(data && data.transactions) || []}
+            rows={data?.transactions ?? []}
             columns={columns}
           />
         </Box>
 
-        {/* Sales by Category */}
         <Box
-          gridColumn="span 4"
-          gridRow="span 3"
-          backgroundColor={theme.palette.background.alt}
-          p="1.5rem"
-          borderRadius="0.55rem"
+          sx={{
+            gridColumn: "span 4",
+            gridRow: "span 3",
+            backgroundColor: theme.palette.background.alt,
+            p: "1.5rem",
+            borderRadius: "0.55rem",
+          }}
         >
           <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
             Sales by Category
           </Typography>
-
           <BreakdownChart isDashboard={true} />
           <Typography
             p="0 0.6rem"
             fontSize="0.8rem"
-            sx={{
-              color: theme.palette.secondary[200],
-            }}
+            sx={{ color: theme.palette.secondary[200] }}
           >
             Breakdown of real states and information via category for revenue
             made for this year and total sales
@@ -235,6 +196,4 @@ const Dashboard = () => {
       </Box>
     </Box>
   );
-};
-
-export default Dashboard;
+}

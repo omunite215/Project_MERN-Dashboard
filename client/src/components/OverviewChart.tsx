@@ -1,37 +1,34 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme, Typography } from "@mui/material";
+import { useSales } from "@/api/queries";
 
-import { useGetSalesQuery } from "state/api";
+interface OverviewChartProps {
+  isDashboard?: boolean;
+  view: string;
+}
 
-// Overview Chart
-const OverviewChart = ({ isDashboard = false, view }) => {
-  // theme
+const OverviewChart = ({ isDashboard = false, view }: OverviewChartProps) => {
   const theme = useTheme();
-  const { data, isLoading } = useGetSalesQuery();
+  const { data, isLoading } = useSales();
 
-  // get chart data
   const [totalSalesLine, totalUnitsLine] = useMemo(() => {
     if (!data) return [];
 
-    // monthly data
     const { monthlyData } = data;
 
-    // total sales line data
     const totalSalesLine = {
       id: "totalSales",
       color: theme.palette.secondary.main,
-      data: [],
+      data: [] as { x: string; y: number }[],
     };
 
-    // total units line data
     const totalUnitsLine = {
       id: "totalUnits",
       color: theme.palette.secondary[600],
-      data: [],
+      data: [] as { x: string; y: number }[],
     };
 
-    // factor monthly data
     Object.values(monthlyData).reduce(
       (acc, { month, totalSales, totalUnits }) => {
         const currentSales = acc.sales + totalSales;
@@ -39,18 +36,12 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 
         totalSalesLine.data = [
           ...totalSalesLine.data,
-          {
-            x: month,
-            y: currentSales,
-          },
+          { x: month, y: currentSales },
         ];
 
         totalUnitsLine.data = [
           ...totalUnitsLine.data,
-          {
-            x: month,
-            y: currentUnits,
-          },
+          { x: month, y: currentUnits },
         ];
 
         return { sales: currentSales, units: currentUnits };
@@ -61,7 +52,6 @@ const OverviewChart = ({ isDashboard = false, view }) => {
     return [[totalSalesLine], [totalUnitsLine]];
   }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // loader
   if (!data || isLoading) {
     return (
       <Typography variant="h5" mt="20%" textAlign="center">
@@ -71,9 +61,8 @@ const OverviewChart = ({ isDashboard = false, view }) => {
   }
 
   return (
-    // line chart
     <ResponsiveLine
-      data={view === "sales" ? totalSalesLine : totalUnitsLine}
+      data={view === "sales" ? totalSalesLine! : totalUnitsLine!}
       theme={{
         axis: {
           domain: {
@@ -122,20 +111,18 @@ const OverviewChart = ({ isDashboard = false, view }) => {
       axisTop={null}
       axisRight={null}
       axisBottom={{
-        format: (v) => {
-          if (isDashboard) return v.slice(0, 3); // Only show first three letters on dashboard
-          return v;
-        },
-        orient: "bottom",
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
         legend: isDashboard ? "" : "Month",
         legendOffset: 36,
         legendPosition: "middle",
+        format: (v) => {
+          if (isDashboard) return String(v).slice(0, 3);
+          return String(v);
+        },
       }}
       axisLeft={{
-        orient: "left",
         tickValues: 5,
         tickSize: 5,
         tickPadding: 5,

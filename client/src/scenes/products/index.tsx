@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Card,
@@ -11,12 +11,13 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
+import Header from "@/components/Header";
+import { useProducts } from "@/api/queries";
+import type { Product } from "@/api/types";
 
-import { useGetProductsQuery } from "state/api";
-import { Header } from "components";
+interface ProductCardProps extends Product {}
 
-// Product
-const Product = ({
+const ProductCard = ({
   _id,
   name,
   description,
@@ -25,10 +26,8 @@ const Product = ({
   category,
   supply,
   stat,
-}) => {
-  // theme
+}: ProductCardProps) => {
   const theme = useTheme();
-  // is expanded
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -39,9 +38,7 @@ const Product = ({
         borderRadius: "0.55rem",
       }}
     >
-      {/* Content */}
       <CardContent>
-        {/* Category */}
         <Typography
           sx={{ fontSize: 14 }}
           color={theme.palette.secondary[700]}
@@ -49,36 +46,24 @@ const Product = ({
         >
           {category}
         </Typography>
-
-        {/* Name */}
         <Typography variant="h5" component="div">
           {name}
         </Typography>
-
-        {/* Price */}
         <Typography sx={{ mb: "1.5rem" }} color={theme.palette.secondary[400]}>
           ${Number(price).toFixed(2)}
         </Typography>
-
-        {/* Rating */}
         <Rating value={rating} readOnly />
-
-        {/* Description */}
         <Typography variant="body2">{description}</Typography>
       </CardContent>
-
-      {/* See More/See Less */}
       <CardActions>
         <Button
-          variant="primary"
+          variant="text"
           size="small"
           onClick={() => setIsExpanded(!isExpanded)}
         >
           {isExpanded ? "See Less" : "See More"}
         </Button>
       </CardActions>
-
-      {/* More Info */}
       <Collapse
         in={isExpanded}
         timeout="auto"
@@ -100,19 +85,13 @@ const Product = ({
   );
 };
 
-// Products
-const Products = () => {
-  // get data
-  const { data, isLoading } = useGetProductsQuery();
-  // is medium/large desktop
+export default function Products() {
+  const { data, isLoading } = useProducts();
   const isNonMobile = useMediaQuery("(min-width: 1000px)");
 
   return (
     <Box m="1.5rem 2.5rem">
-      {/* Header */}
       <Header title="PRODUCTS" subtitle="See your list of products." />
-
-      {/* Content */}
       {data || !isLoading ? (
         <Box
           mt="20px"
@@ -125,40 +104,15 @@ const Products = () => {
             "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
           }}
         >
-          {/* Loop over each product */}
-          {data.map(
-            ({
-              _id,
-              name,
-              description,
-              price,
-              rating,
-              category,
-              supply,
-              stat,
-            }) => (
-              <Product
-                key={_id}
-                _id={_id}
-                name={name}
-                description={description}
-                price={price}
-                rating={rating}
-                category={category}
-                supply={supply}
-                stat={stat}
-              />
-            )
-          )}
+          {data?.map((product) => (
+            <ProductCard key={product._id} {...product} />
+          ))}
         </Box>
       ) : (
-        // Loader
         <Typography variant="h5" mt="20%" textAlign="center">
           Loading...
         </Typography>
       )}
     </Box>
   );
-};
-
-export default Products;
+}

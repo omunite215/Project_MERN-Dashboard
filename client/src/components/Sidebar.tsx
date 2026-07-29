@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   Box,
   Divider,
@@ -17,97 +17,33 @@ import {
   SettingsOutlined,
   ChevronLeft,
   ChevronRightOutlined,
-  HomeOutlined,
-  ShoppingCartOutlined,
-  Groups2Outlined,
-  ReceiptLongOutlined,
-  PublicOutlined,
-  PointOfSaleOutlined,
-  TodayOutlined,
-  CalendarMonthOutlined,
-  AdminPanelSettingsOutlined,
-  TrendingUpOutlined,
-  PieChartOutlined,
 } from "@mui/icons-material";
+import type { Dispatch, SetStateAction } from "react";
+import type { User } from "@/api/types";
+import { navItems } from "@/config/navItems";
+import FlexBetween from "@/components/FlexBetween";
+import profileImage from "@/assets/profile.jpeg";
 
-import { FlexBetween } from ".";
-import profileImage from "assets/profile.jpeg";
+interface SidebarProps {
+  user: Partial<User>;
+  isNonMobile: boolean;
+  drawerWidth: string;
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
+}
 
-// Nav items
-const navItems = [
-  {
-    text: "Dashboard",
-    icon: <HomeOutlined />,
-  },
-  {
-    text: "Client Facing",
-    icon: null,
-  },
-  {
-    text: "Products",
-    icon: <ShoppingCartOutlined />,
-  },
-  {
-    text: "Customers",
-    icon: <Groups2Outlined />,
-  },
-  {
-    text: "Transactions",
-    icon: <ReceiptLongOutlined />,
-  },
-  {
-    text: "Geography",
-    icon: <PublicOutlined />,
-  },
-  {
-    text: "Sales",
-    icon: null,
-  },
-  {
-    text: "Overview",
-    icon: <PointOfSaleOutlined />,
-  },
-  {
-    text: "Daily",
-    icon: <TodayOutlined />,
-  },
-  {
-    text: "Monthly",
-    icon: <CalendarMonthOutlined />,
-  },
-  {
-    text: "Breakdown",
-    icon: <PieChartOutlined />,
-  },
-  {
-    text: "Management",
-    icon: null,
-  },
-  {
-    text: "Admin",
-    icon: <AdminPanelSettingsOutlined />,
-  },
-  {
-    text: "Performance",
-    icon: <TrendingUpOutlined />,
-  },
-];
-
-// Sidebar
 const Sidebar = ({
   user,
   isNonMobile,
   drawerWidth,
   isSidebarOpen,
   setIsSidebarOpen,
-}) => {
-  // config
-  const { pathname } = useLocation();
+}: SidebarProps) => {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [active, setActive] = useState("");
   const navigate = useNavigate();
   const theme = useTheme();
 
-  // set active path
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
@@ -115,7 +51,6 @@ const Sidebar = ({
   return (
     <Box component="nav">
       {isSidebarOpen && (
-        // Sidebar
         <Drawer
           open={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
@@ -136,7 +71,6 @@ const Sidebar = ({
           }}
         >
           <Box width="100%">
-            {/* Brand Info */}
             <Box m="1.5rem 2rem 2rem 3rem">
               <FlexBetween color={theme.palette.secondary.main}>
                 <Box display="flex" alignItems="center" gap="0.5rem">
@@ -144,18 +78,15 @@ const Sidebar = ({
                     variant="h4"
                     fontWeight="bold"
                     onClick={() => {
-                      navigate("/dashboard");
+                      void navigate({ to: "/dashboard" as "/" });
                       setActive("dashboard");
                     }}
-                    sx={{
-                      cursor: "pointer",
-                    }}
+                    sx={{ cursor: "pointer" }}
                     title="ECOMVISION"
                   >
                     ECOMVISION
                   </Typography>
                 </Box>
-                {/* Mobile Sidebar Toggle Icon */}
                 {!isNonMobile && (
                   <IconButton
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -167,9 +98,8 @@ const Sidebar = ({
               </FlexBetween>
             </Box>
 
-            {/* Sidebar items */}
             <List>
-              {navItems.map(({ text, icon }) => {
+              {navItems.map(({ text, icon, path }) => {
                 if (!icon) {
                   return (
                     <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
@@ -178,43 +108,37 @@ const Sidebar = ({
                   );
                 }
 
-                // lowercase text
-                const lcText = text.toLowerCase();
-
                 return (
                   <ListItem key={text} title={text} disablePadding>
                     <ListItemButton
                       onClick={() => {
-                        navigate(`/${lcText}`);
-                        setActive(lcText);
+                        void navigate({ to: `/${path}` as "/" });
+                        setActive(path!);
                       }}
                       sx={{
                         backgroundColor:
-                          active === lcText
+                          active === path
                             ? theme.palette.secondary[300]
                             : "transparent",
                         color:
-                          active === lcText
+                          active === path
                             ? theme.palette.primary[600]
                             : theme.palette.secondary[100],
                       }}
                     >
-                      {/* icon */}
                       <ListItemIcon
                         sx={{
                           ml: "2rem",
                           color:
-                            active === lcText
+                            active === path
                               ? theme.palette.primary[600]
                               : theme.palette.secondary[200],
                         }}
                       >
                         {icon}
                       </ListItemIcon>
-
-                      {/* text */}
                       <ListItemText primary={text} />
-                      {active === lcText && (
+                      {active === path && (
                         <ChevronRightOutlined sx={{ ml: "auto" }} />
                       )}
                     </ListItemButton>
@@ -224,7 +148,6 @@ const Sidebar = ({
             </List>
           </Box>
 
-          {/* User */}
           <Box pb="1rem">
             <Divider />
             <FlexBetween textTransform="none" gap="1rem" m="1.5rem 2rem 0 3rem">

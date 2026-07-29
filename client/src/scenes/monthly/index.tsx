@@ -1,123 +1,66 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import { ResponsiveLine } from "@nivo/line";
-
-import { useGetSalesQuery } from "state/api";
-import { Header } from "components";
-
+import Header from "@/components/Header";
+import { useSales } from "@/api/queries";
 import "react-datepicker/dist/react-datepicker.css";
 
-// Monthly
-const Monthly = () => {
-  // get data
-  const { data } = useGetSalesQuery();
-  // theme
+export default function Monthly() {
+  const { data } = useSales();
   const theme = useTheme();
 
-  // formatted data
   const [formattedData] = useMemo(() => {
     if (!data) return [];
 
-    // monthly data
     const { monthlyData } = data;
 
-    // total sales line
     const totalSalesLine = {
       id: "totalSales",
       color: theme.palette.secondary.main,
-      data: [],
+      data: [] as { x: string; y: number }[],
     };
 
-    // total units line
     const totalUnitsLine = {
       id: "totalUnits",
       color: theme.palette.secondary[600],
-      data: [],
+      data: [] as { x: string; y: number }[],
     };
 
-    // factor monthly data
     Object.values(monthlyData).forEach(({ month, totalSales, totalUnits }) => {
-      totalSalesLine.data = [
-        ...totalSalesLine.data,
-        {
-          x: month,
-          y: totalSales,
-        },
-      ];
-
-      totalUnitsLine.data = [
-        ...totalUnitsLine.data,
-        {
-          x: month,
-          y: totalUnits,
-        },
-      ];
+      totalSalesLine.data = [...totalSalesLine.data, { x: month, y: totalSales }];
+      totalUnitsLine.data = [...totalUnitsLine.data, { x: month, y: totalUnits }];
     });
 
-    const formattedData = [totalSalesLine, totalUnitsLine];
-
-    return [formattedData];
+    return [[totalSalesLine, totalUnitsLine]];
   }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Box m="1.5rem 2.5rem">
-      {/* Header */}
       <Header title="MONTHLY SALES" subtitle="Chart of monthly sales" />
-
-      {/* Content */}
       {data ? (
         <Box height="75vh">
-          {/* Line Chart */}
           <ResponsiveLine
-            data={formattedData}
+            data={formattedData ?? []}
             theme={{
               axis: {
-                domain: {
-                  line: {
-                    stroke: theme.palette.secondary[200],
-                  },
-                },
-                legend: {
-                  text: {
-                    fill: theme.palette.secondary[200],
-                  },
-                },
+                domain: { line: { stroke: theme.palette.secondary[200] } },
+                legend: { text: { fill: theme.palette.secondary[200] } },
                 ticks: {
-                  line: {
-                    stroke: theme.palette.secondary[200],
-                    strokeWidth: 1,
-                  },
-                  text: {
-                    fill: theme.palette.secondary[200],
-                  },
+                  line: { stroke: theme.palette.secondary[200], strokeWidth: 1 },
+                  text: { fill: theme.palette.secondary[200] },
                 },
               },
-              legends: {
-                text: {
-                  fill: theme.palette.secondary[200],
-                },
-              },
-              tooltip: {
-                container: {
-                  color: theme.palette.primary.main,
-                },
-              },
+              legends: { text: { fill: theme.palette.secondary[200] } },
+              tooltip: { container: { color: theme.palette.primary.main } },
             }}
             colors={{ datum: "color" }}
             margin={{ top: 50, right: 50, bottom: 70, left: 60 }}
             xScale={{ type: "point" }}
-            yScale={{
-              type: "linear",
-              min: "auto",
-              max: "auto",
-              stacked: false,
-              reverse: false,
-            }}
+            yScale={{ type: "linear", min: "auto", max: "auto", stacked: false, reverse: false }}
             yFormat=" >-.2f"
             axisTop={null}
             axisRight={null}
             axisBottom={{
-              orient: "bottom",
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 90,
@@ -126,7 +69,6 @@ const Monthly = () => {
               legendPosition: "middle",
             }}
             axisLeft={{
-              orient: "left",
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
@@ -160,10 +102,7 @@ const Monthly = () => {
                 effects: [
                   {
                     on: "hover",
-                    style: {
-                      itemBackground: "rgba(0, 0, 0, .03)",
-                      itemOpacity: 1,
-                    },
+                    style: { itemBackground: "rgba(0, 0, 0, .03)", itemOpacity: 1 },
                   },
                 ],
               },
@@ -171,13 +110,10 @@ const Monthly = () => {
           />
         </Box>
       ) : (
-        // Loader
         <Typography variant="h5" mt="20%" textAlign="center">
           Loading...
         </Typography>
       )}
     </Box>
   );
-};
-
-export default Monthly;
+}

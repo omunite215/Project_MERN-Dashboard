@@ -1,13 +1,14 @@
-import React from "react";
 import { Typography, Box, useTheme } from "@mui/material";
 
-// Header
-const Header = ({ title, subtitle }) => {
-  // theme
+interface HeaderProps {
+  title: string;
+  subtitle: string;
+}
+
+const Header = ({ title, subtitle }: HeaderProps) => {
   const theme = useTheme();
   return (
     <Box>
-      {/* Title */}
       <Typography
         variant="h2"
         color={theme.palette.secondary[100]}
@@ -16,8 +17,6 @@ const Header = ({ title, subtitle }) => {
       >
         {title}
       </Typography>
-
-      {/* Subtitle */}
       <Typography variant="h5" color={theme.palette.secondary[300]}>
         {subtitle}
       </Typography>

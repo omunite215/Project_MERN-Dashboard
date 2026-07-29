@@ -1,15 +1,15 @@
-import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 import { Box, Typography, useTheme } from "@mui/material";
+import { useSales } from "@/api/queries";
 
-import { useGetSalesQuery } from "state/api";
+interface BreakdownChartProps {
+  isDashboard?: boolean;
+}
 
-// Breakdown Chart
-const BreakdownChart = ({ isDashboard = false }) => {
-  const { data, isLoading } = useGetSalesQuery();
+const BreakdownChart = ({ isDashboard = false }: BreakdownChartProps) => {
+  const { data, isLoading } = useSales();
   const theme = useTheme();
 
-  // Loader
   if (!data || isLoading) {
     return (
       <Typography variant="h5" mt="20%" textAlign="center">
@@ -18,7 +18,6 @@ const BreakdownChart = ({ isDashboard = false }) => {
     );
   }
 
-  // theme colors
   const colors = [
     theme.palette.secondary[500],
     theme.palette.secondary[300],
@@ -26,7 +25,6 @@ const BreakdownChart = ({ isDashboard = false }) => {
     theme.palette.secondary[500],
   ];
 
-  // formatted data
   const formattedData = Object.entries(data.salesByCategory).map(
     ([category, sales], i) => ({
       id: category,
@@ -44,7 +42,6 @@ const BreakdownChart = ({ isDashboard = false }) => {
       minWidth={isDashboard ? "325px" : undefined}
       position="relative"
     >
-      {/* Pie chart */}
       <ResponsivePie
         data={formattedData}
         theme={{
@@ -129,16 +126,14 @@ const BreakdownChart = ({ isDashboard = false }) => {
           },
         ]}
       />
-
-      {/* Pie chart center */}
       <Box
-        position="absolute"
-        top="50%"
-        left="50%"
-        color={theme.palette.secondary[400]}
-        textAlign="center"
-        pointerEvents="none"
         sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          color: theme.palette.secondary[400],
+          textAlign: "center",
+          pointerEvents: "none",
           transform: isDashboard
             ? "translate(-75%, -170%)"
             : "translate(-50%, -100%)",
