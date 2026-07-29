@@ -4,7 +4,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  Collapse,
   Button,
   Typography,
   Rating,
@@ -13,10 +12,14 @@ import {
 } from "@mui/material";
 import Header from "@/components/Header";
 import AsyncState from "@/components/AsyncState";
+import Collapsible from "@/components/Collapsible";
+import { useStaggerIn } from "@/hooks/useStaggerIn";
 import { useProducts } from "@/api/queries";
 import type { Product } from "@/api/types";
 
-interface ProductCardProps extends Product {}
+interface ProductCardProps extends Product {
+  className?: string;
+}
 
 const ProductCard = ({
   _id,
@@ -27,12 +30,14 @@ const ProductCard = ({
   category,
   supply,
   stat,
+  className,
 }: ProductCardProps) => {
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <Card
+      className={className}
       sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
@@ -65,12 +70,7 @@ const ProductCard = ({
           {isExpanded ? "See Less" : "See More"}
         </Button>
       </CardActions>
-      <Collapse
-        in={isExpanded}
-        timeout="auto"
-        unmountOnExit
-        sx={{ color: theme.palette.neutral[300] }}
-      >
+      <Collapsible open={isExpanded} sx={{ color: theme.palette.neutral[300] }}>
         <CardContent>
           <Typography>id: {_id}</Typography>
           <Typography>Supply Left: {supply}</Typography>
@@ -81,7 +81,7 @@ const ProductCard = ({
             Yearly Units Sold This Year: {stat[0].yearlyTotalSoldUnits}
           </Typography>
         </CardContent>
-      </Collapse>
+      </Collapsible>
     </Card>
   );
 };
@@ -89,6 +89,7 @@ const ProductCard = ({
 export default function Products() {
   const { data, isLoading, error } = useProducts();
   const isNonMobile = useMediaQuery("(min-width: 1000px)");
+  const gridRef = useStaggerIn(".product-card");
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -96,6 +97,7 @@ export default function Products() {
       <AsyncState isLoading={isLoading} error={error} data={data}>
         {(products) => (
           <Box
+            ref={gridRef}
             mt="20px"
             display="grid"
             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
@@ -107,7 +109,11 @@ export default function Products() {
             }}
           >
             {products.map((product) => (
-              <ProductCard key={product._id} {...product} />
+              <ProductCard
+                key={product._id}
+                {...product}
+                className="product-card"
+              />
             ))}
           </Box>
         )}

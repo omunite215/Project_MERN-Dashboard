@@ -22,6 +22,7 @@ import DataTable from "@/components/DataTable";
 import { useDashboard } from "@/api/queries";
 import type { Transaction } from "@/api/types";
 import AsyncState from "@/components/AsyncState";
+import { useStaggerIn } from "@/hooks/useStaggerIn";
 
 const columns: GridColDef<Transaction>[] = [
   { field: "_id", headerName: "ID", flex: 1 },
@@ -46,6 +47,7 @@ export default function Dashboard() {
   const theme = useTheme();
   const isNonMediumScreen = useMediaQuery("(min-width: 1200px)");
   const { data, isLoading, error } = useDashboard();
+  const gridRef = useStaggerIn(".stat-in");
 
   if (error) {
     return (
@@ -85,6 +87,7 @@ export default function Dashboard() {
       </FlexBetween>
 
       <Box
+        ref={gridRef}
         mt="20px"
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
@@ -98,6 +101,7 @@ export default function Dashboard() {
       >
         {/* ROW 1 */}
         <StatBox
+          className="stat-in"
           title="Total Customers"
           value={data?.totalCustomers}
           increase="+14%"
@@ -109,6 +113,7 @@ export default function Dashboard() {
           }
         />
         <StatBox
+          className="stat-in"
           title="Sales Today"
           value={data?.todayStats.totalSales}
           increase="+21%"
@@ -120,6 +125,7 @@ export default function Dashboard() {
           }
         />
         <Box
+          className="stat-in"
           sx={{
             gridColumn: "span 8",
             gridRow: "span 2",
@@ -131,6 +137,7 @@ export default function Dashboard() {
           <OverviewChart view="sales" isDashboard={true} />
         </Box>
         <StatBox
+          className="stat-in"
           title="Monthly Sales"
           value={data?.thisMonthStats.totalSales}
           increase="+5%"
@@ -142,6 +149,7 @@ export default function Dashboard() {
           }
         />
         <StatBox
+          className="stat-in"
           title="Yearly Sales"
           value={data?.yearlySalesTotal}
           increase="+43%"
@@ -155,6 +163,7 @@ export default function Dashboard() {
 
         {/* ROW 2 */}
         <DataTable
+          className="stat-in"
           rows={data?.transactions ?? []}
           columns={columns}
           loading={isLoading || !data}
@@ -184,6 +193,7 @@ export default function Dashboard() {
         />
 
         <Box
+          className="stat-in"
           sx={{
             gridColumn: "span 4",
             gridRow: "span 3",

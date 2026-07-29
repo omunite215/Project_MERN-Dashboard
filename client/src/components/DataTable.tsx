@@ -34,6 +34,7 @@ interface DataTableProps<T extends object> {
   server?: ServerPaginationProps;
   slots?: Partial<GridSlotsComponent>;
   slotProps?: GridSlotsComponentsProps;
+  className?: string;
 }
 
 export default function DataTable<T extends object>({
@@ -47,11 +48,12 @@ export default function DataTable<T extends object>({
   server,
   slots,
   slotProps,
+  className,
 }: DataTableProps<T>) {
   const theme = useTheme();
 
   return (
-    <Box height={sxOverride ? height : (height ?? "75vh")} mt={mt} sx={sxOverride ?? dataGridSx(theme)}>
+    <Box className={className} height={sxOverride ? height : (height ?? "75vh")} mt={mt} sx={sxOverride ?? dataGridSx(theme)}>
       <DataGrid
         loading={loading}
         getRowId={getRowId}

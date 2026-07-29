@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
+import { useStaggerIn } from "@/hooks/useStaggerIn";
 import {
   Box,
   Divider,
@@ -43,6 +44,7 @@ const Sidebar = ({
   const [active, setActive] = useState("");
   const navigate = useNavigate();
   const theme = useTheme();
+  const listRef = useStaggerIn(".MuiListItem-root");
 
   useEffect(() => {
     setActive(pathname.substring(1));
@@ -98,54 +100,56 @@ const Sidebar = ({
               </FlexBetween>
             </Box>
 
-            <List>
-              {navItems.map(({ text, icon, path }) => {
-                if (!icon) {
-                  return (
-                    <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
-                      {text}
-                    </Typography>
-                  );
-                }
+            <Box ref={listRef}>
+              <List>
+                {navItems.map(({ text, icon, path }) => {
+                  if (!icon) {
+                    return (
+                      <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
+                        {text}
+                      </Typography>
+                    );
+                  }
 
-                return (
-                  <ListItem key={text} title={text} disablePadding>
-                    <ListItemButton
-                      onClick={() => {
-                        void navigate({ to: `/${path}` as "/" });
-                        setActive(path!);
-                      }}
-                      sx={{
-                        backgroundColor:
-                          active === path
-                            ? theme.palette.secondary[300]
-                            : "transparent",
-                        color:
-                          active === path
-                            ? theme.palette.primary[600]
-                            : theme.palette.secondary[100],
-                      }}
-                    >
-                      <ListItemIcon
+                  return (
+                    <ListItem key={text} title={text} disablePadding>
+                      <ListItemButton
+                        onClick={() => {
+                          void navigate({ to: `/${path}` as "/" });
+                          setActive(path!);
+                        }}
                         sx={{
-                          ml: "2rem",
+                          backgroundColor:
+                            active === path
+                              ? theme.palette.secondary[300]
+                              : "transparent",
                           color:
                             active === path
                               ? theme.palette.primary[600]
-                              : theme.palette.secondary[200],
+                              : theme.palette.secondary[100],
                         }}
                       >
-                        {icon}
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                      {active === path && (
-                        <ChevronRightOutlined sx={{ ml: "auto" }} />
-                      )}
-                    </ListItemButton>
-                  </ListItem>
-                );
-              })}
-            </List>
+                        <ListItemIcon
+                          sx={{
+                            ml: "2rem",
+                            color:
+                              active === path
+                                ? theme.palette.primary[600]
+                                : theme.palette.secondary[200],
+                          }}
+                        >
+                          {icon}
+                        </ListItemIcon>
+                        <ListItemText primary={text} />
+                        {active === path && (
+                          <ChevronRightOutlined sx={{ ml: "auto" }} />
+                        )}
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Box>
           </Box>
 
           <Box pb="1rem">

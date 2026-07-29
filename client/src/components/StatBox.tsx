@@ -8,12 +8,14 @@ interface StatBoxProps {
   increase: string;
   icon: ReactNode;
   description: string;
+  className?: string;
 }
 
-const StatBox = ({ title, value, increase, icon, description }: StatBoxProps) => {
+const StatBox = ({ title, value, increase, icon, description, className }: StatBoxProps) => {
   const theme = useTheme();
   return (
     <Box
+      className={className}
       sx={{
         gridColumn: "span 2",
         gridRow: "span 1",
