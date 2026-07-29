@@ -2,6 +2,9 @@ import type { ReactElement } from "react";
 import {
   createRootRoute, createRoute, createRouter, redirect, Outlet,
 } from "@tanstack/react-router";
+import { useAuthStore } from "@/store/useAuthStore";
+import Login from "@/scenes/login";
+import Register from "@/scenes/register";
 import Layout from "@/scenes/layout";
 import Dashboard from "@/scenes/dashboard";
 import Products from "@/scenes/products";
@@ -17,10 +20,18 @@ import Performance from "@/scenes/performance";
 
 const rootRoute = createRootRoute({ component: Outlet });
 
+const loginRoute = createRoute({ getParentRoute: () => rootRoute, path: "/login", component: Login });
+const registerRoute = createRoute({ getParentRoute: () => rootRoute, path: "/register", component: Register });
+
 const layoutRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: "layout",
   component: Layout,
+  beforeLoad: () => {
+    if (!useAuthStore.getState().accessToken) {
+      throw redirect({ to: "/login" });
+    }
+  },
 });
 
 const indexRoute = createRoute({
@@ -48,7 +59,11 @@ const routes = [
   child("/performance", Performance),
 ];
 
-const routeTree = rootRoute.addChildren([layoutRoute.addChildren(routes)]);
+const routeTree = rootRoute.addChildren([
+  loginRoute,
+  registerRoute,
+  layoutRoute.addChildren(routes),
+]);
 
 export const router = createRouter({ routeTree });
 

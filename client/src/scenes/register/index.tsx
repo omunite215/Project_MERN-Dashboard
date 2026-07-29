@@ -159,7 +159,7 @@ export default function Register() {
 
         <Typography sx={{ mt: 2 }} variant="body2">
           Already have an account?{" "}
-          <Link to={"/login" as "/"}>Sign in</Link>
+          <Link to="/login">Sign in</Link>
         </Typography>
       </Paper>
     </Box>

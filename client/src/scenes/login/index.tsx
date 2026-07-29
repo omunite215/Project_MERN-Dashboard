@@ -130,7 +130,7 @@ export default function Login() {
 
         <Typography sx={{ mt: 2 }} variant="body2">
           No account?{" "}
-          <Link to={"/register" as "/"}>Register</Link>
+          <Link to="/register">Register</Link>
         </Typography>
       </Paper>
     </Box>

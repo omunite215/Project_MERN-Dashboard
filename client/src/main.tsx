@@ -8,6 +8,9 @@ import { queryClient } from "@/app/queryClient";
 import { router } from "@/router";
 import { useThemeStore } from "@/store/useThemeStore";
 import { themeSettings } from "@/theme/theme";
+import { refreshAccessToken } from "@/api/authClient";
+import { fetchMe } from "@/api/auth";
+import { useAuthStore } from "@/store/useAuthStore";
 import "@/styles/index.css";
 
 function Root() {
@@ -23,8 +26,22 @@ function Root() {
   );
 }
 
-createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Root />
-  </React.StrictMode>
-);
+async function bootstrap() {
+  const token = await refreshAccessToken();
+  if (token) {
+    try {
+      const user = await fetchMe();
+      useAuthStore.getState().setAuth({ accessToken: token, user });
+    } catch {
+      useAuthStore.getState().clearAuth();
+    }
+  }
+}
+
+bootstrap().finally(() => {
+  createRoot(document.getElementById("root")!).render(
+    <React.StrictMode>
+      <Root />
+    </React.StrictMode>,
+  );
+});
