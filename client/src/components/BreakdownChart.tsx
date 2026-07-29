@@ -32,11 +32,13 @@ const BreakdownChart = ({ isDashboard = false }: BreakdownChartProps) => {
 
         return (
           <Box
-            height={isDashboard ? "400px" : "100%"}
-            width={undefined}
-            minHeight={isDashboard ? "325px" : undefined}
-            minWidth={isDashboard ? "325px" : undefined}
-            position="relative"
+            sx={{
+              height: isDashboard ? "400px" : "100%",
+              width: undefined,
+              minHeight: isDashboard ? "325px" : undefined,
+              minWidth: isDashboard ? "325px" : undefined,
+              position: "relative",
+            }}
           >
             <ResponsivePie
               data={formattedData}

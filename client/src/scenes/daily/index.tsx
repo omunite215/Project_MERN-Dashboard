@@ -47,15 +47,15 @@ export default function Daily() {
   }, [data, startDate, endDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box sx={{ m: "1.5rem 2.5rem" }}>
       <Header title="DAILY SALES" subtitle="Chart of daily sales" />
       <AsyncState isLoading={isLoading} error={error} data={data}>
         {() => (
-          <Box height="75vh">
-            <Box display="flex" justifyContent="flex-end" gap="0.75rem" mb="1rem">
+          <Box sx={{ height: "75vh" }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem", mb: "1rem" }}>
               <DatePicker
                 selected={startDate}
-                onChange={(date) => date && setStartDate(date)}
+                onChange={(date: Date | null) => date && setStartDate(date)}
                 selectsStart
                 startDate={startDate}
                 endDate={endDate}
@@ -63,7 +63,7 @@ export default function Daily() {
               />
               <DatePicker
                 selected={endDate}
-                onChange={(date) => date && setEndDate(date)}
+                onChange={(date: Date | null) => date && setEndDate(date)}
                 selectsEnd
                 startDate={startDate}
                 endDate={endDate}

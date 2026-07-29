@@ -17,13 +17,15 @@ function AsyncState<T>({
   if (error) {
     return (
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
-        minHeight="200px"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          minHeight: "200px",
+        }}
       >
-        <Typography variant="h5" color="error.main" textAlign="center">
+        <Typography variant="h5" color="error.main" sx={{ textAlign: "center" }}>
           Failed to load data.
         </Typography>
       </Box>
@@ -33,11 +35,13 @@ function AsyncState<T>({
   if (isLoading || data === undefined) {
     return (
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
-        minHeight="200px"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          minHeight: "200px",
+        }}
       >
         <CircularProgress />
       </Box>

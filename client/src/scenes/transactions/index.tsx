@@ -51,7 +51,7 @@ export default function Transactions() {
   };
 
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box sx={{ m: "1.5rem 2.5rem" }}>
       <Header title="TRANSACTIONS" subtitle="Entire list of transactions" />
       <AsyncState isLoading={isLoading} error={error} data={data}>
         {(txData) => (

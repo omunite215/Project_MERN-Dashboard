@@ -98,7 +98,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }: NavbarProps) => {
         </FlexBetween>
 
         {/* Right Side */}
-        <FlexBetween gap="1.5rem">
+        <FlexBetween sx={{ gap: "1.5rem" }}>
           <IconButton
             onClick={() =>
               window.open(
@@ -139,22 +139,16 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }: NavbarProps) => {
                 component="img"
                 alt="profile"
                 src={profileImage}
-                height="32px"
-                width="32px"
-                borderRadius="50%"
-                sx={{ objectFit: "cover" }}
+                sx={{ height: "32px", width: "32px", borderRadius: "50%", objectFit: "cover" }}
               />
-              <Box textAlign="left">
+              <Box sx={{ textAlign: "left" }}>
                 <Typography
-                  fontWeight="bold"
-                  fontSize="0.85rem"
-                  sx={{ color: theme.palette.secondary[100] }}
+                  sx={{ fontWeight: "bold", fontSize: "0.85rem", color: theme.palette.secondary[100] }}
                 >
                   {user.name}
                 </Typography>
                 <Typography
-                  fontSize="0.75rem"
-                  sx={{ color: theme.palette.secondary[200] }}
+                  sx={{ fontSize: "0.75rem", color: theme.palette.secondary[200] }}
                 >
                   {user.occupation}
                 </Typography>

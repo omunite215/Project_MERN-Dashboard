@@ -25,7 +25,7 @@ const DataGridCustomToolbar = ({
 }: DataGridCustomToolbarProps) => {
   return (
     <GridToolbarContainer>
-      <FlexBetween width="100%">
+      <FlexBetween sx={{ width: "100%" }}>
         <FlexBetween>
           <GridToolbarColumnsButton />
           <GridToolbarDensitySelector />
@@ -43,19 +43,21 @@ const DataGridCustomToolbar = ({
           }}
           value={searchInput}
           variant="standard"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => {
-                    setSearch(searchInput);
-                    setSearchInput("");
-                  }}
-                >
-                  <Search />
-                </IconButton>
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => {
+                      setSearch(searchInput);
+                      setSearchInput("");
+                    }}
+                  >
+                    <Search />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
           }}
         />
       </FlexBetween>

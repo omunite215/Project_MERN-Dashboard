@@ -9,7 +9,7 @@ export default function Customers() {
   const { data, isLoading, error } = useCustomers();
 
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box sx={{ m: "1.5rem 2.5rem" }}>
       <Header title="CUSTOMERS" subtitle="List of Customers" />
       <AsyncState isLoading={isLoading} error={error} data={data}>
         {(customers) => (

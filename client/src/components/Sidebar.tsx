@@ -72,18 +72,17 @@ const Sidebar = ({
             },
           }}
         >
-          <Box width="100%">
-            <Box m="1.5rem 2rem 2rem 3rem">
-              <FlexBetween color={theme.palette.secondary.main}>
-                <Box display="flex" alignItems="center" gap="0.5rem">
+          <Box sx={{ width: "100%" }}>
+            <Box sx={{ m: "1.5rem 2rem 2rem 3rem" }}>
+              <FlexBetween sx={{ color: theme.palette.secondary.main }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <Typography
                     variant="h4"
-                    fontWeight="bold"
+                    sx={{ fontWeight: "bold", cursor: "pointer" }}
                     onClick={() => {
                       void navigate({ to: "/dashboard" as "/" });
                       setActive("dashboard");
                     }}
-                    sx={{ cursor: "pointer" }}
                     title="ECOMVISION"
                   >
                     ECOMVISION
@@ -152,29 +151,23 @@ const Sidebar = ({
             </Box>
           </Box>
 
-          <Box pb="1rem">
+          <Box sx={{ pb: "1rem" }}>
             <Divider />
-            <FlexBetween textTransform="none" gap="1rem" m="1.5rem 2rem 0 3rem">
+            <FlexBetween sx={{ textTransform: "none", gap: "1rem", m: "1.5rem 2rem 0 3rem" }}>
               <Box
                 component="img"
                 alt="profile"
                 src={profileImage}
-                height="40px"
-                width="40px"
-                borderRadius="50%"
-                sx={{ objectFit: "cover" }}
+                sx={{ height: "40px", width: "40px", borderRadius: "50%", objectFit: "cover" }}
               />
-              <Box textAlign="left">
+              <Box sx={{ textAlign: "left" }}>
                 <Typography
-                  fontWeight="bold"
-                  fontSize="0.9rem"
-                  sx={{ color: theme.palette.secondary[100] }}
+                  sx={{ fontWeight: "bold", fontSize: "0.9rem", color: theme.palette.secondary[100] }}
                 >
                   {user.name}
                 </Typography>
                 <Typography
-                  fontSize="0.8rem"
-                  sx={{ color: theme.palette.secondary[200] }}
+                  sx={{ fontSize: "0.8rem", color: theme.palette.secondary[200] }}
                 >
                   {user.occupation}
                 </Typography>

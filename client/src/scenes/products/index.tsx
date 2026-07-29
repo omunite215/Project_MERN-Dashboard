@@ -46,8 +46,7 @@ const ProductCard = ({
     >
       <CardContent>
         <Typography
-          sx={{ fontSize: 14 }}
-          color={theme.palette.secondary[700]}
+          sx={{ fontSize: 14, color: theme.palette.secondary[700] }}
           gutterBottom
         >
           {category}
@@ -55,7 +54,7 @@ const ProductCard = ({
         <Typography variant="h5" component="div">
           {name}
         </Typography>
-        <Typography sx={{ mb: "1.5rem" }} color={theme.palette.secondary[400]}>
+        <Typography sx={{ mb: "1.5rem", color: theme.palette.secondary[400] }}>
           ${Number(price).toFixed(2)}
         </Typography>
         <Rating value={rating} readOnly />
@@ -92,19 +91,19 @@ export default function Products() {
   const gridRef = useStaggerIn(".product-card");
 
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box sx={{ m: "1.5rem 2.5rem" }}>
       <Header title="PRODUCTS" subtitle="See your list of products." />
       <AsyncState isLoading={isLoading} error={error} data={data}>
         {(products) => (
           <Box
             ref={gridRef}
-            mt="20px"
-            display="grid"
-            gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-            justifyContent="space-between"
-            rowGap="20px"
-            columnGap="1.33%"
             sx={{
+              mt: "20px",
+              display: "grid",
+              gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+              justifyContent: "space-between",
+              rowGap: "20px",
+              columnGap: "1.33%",
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >

@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import {
   createRootRoute, createRoute, createRouter, redirect, Outlet,
 } from "@tanstack/react-router";
@@ -28,7 +29,7 @@ const indexRoute = createRoute({
   beforeLoad: () => { throw redirect({ to: "/dashboard" as "/" }); },
 });
 
-function child(path: string, component: () => JSX.Element) {
+function child(path: string, component: () => ReactElement) {
   return createRoute({ getParentRoute: () => layoutRoute, path, component });
 }
 

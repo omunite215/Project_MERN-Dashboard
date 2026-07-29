@@ -53,7 +53,14 @@ export default function DataTable<T extends object>({
   const theme = useTheme();
 
   return (
-    <Box className={className} height={sxOverride ? height : (height ?? "75vh")} mt={mt} sx={sxOverride ?? dataGridSx(theme)}>
+    <Box
+      className={className}
+      sx={{
+        height: sxOverride ? height : (height ?? "75vh"),
+        mt,
+        ...(sxOverride ?? dataGridSx(theme)),
+      }}
+    >
       <DataGrid
         loading={loading}
         getRowId={getRowId}

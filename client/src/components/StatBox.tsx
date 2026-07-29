@@ -37,16 +37,15 @@ const StatBox = ({ title, value, increase, icon, description, className }: StatB
 
       <Typography
         variant="h3"
-        fontWeight="600"
-        sx={{ color: theme.palette.secondary[200] }}
+        sx={{ fontWeight: "600", color: theme.palette.secondary[200] }}
       >
         {value}
       </Typography>
 
-      <FlexBetween gap="1rem">
+      <FlexBetween sx={{ gap: "1rem" }}>
         {/* Original used theme.palette.light (undefined at runtime) → inherited
             text color. Preserve that exact appearance by not overriding color. */}
-        <Typography variant="h5" fontStyle="italic">
+        <Typography variant="h5" sx={{ fontStyle: "italic" }}>
           {increase}
         </Typography>
         <Typography>{description}</Typography>

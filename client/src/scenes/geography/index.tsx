@@ -10,13 +10,15 @@ export default function Geography() {
   const { data, isLoading, error } = useGeography();
 
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box sx={{ m: "1.5rem 2.5rem" }}>
       <Header title="GEOGRAPHY" subtitle="Find where your users are located." />
       <Box
-        mt="40px"
-        height="75vh"
-        border={`1px solid ${theme.palette.secondary[200]}`}
-        borderRadius="4px"
+        sx={{
+          mt: "40px",
+          height: "75vh",
+          border: `1px solid ${theme.palette.secondary[200]}`,
+          borderRadius: "4px",
+        }}
       >
         <AsyncState isLoading={isLoading} error={error} data={data}>
           {(geoItems) => (

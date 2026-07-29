@@ -51,7 +51,7 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <Box m="1.5rem 2.5rem">
+      <Box sx={{ m: "1.5rem 2.5rem" }}>
         <FlexBetween>
           <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
         </FlexBetween>
@@ -63,7 +63,7 @@ export default function Dashboard() {
   }
 
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box sx={{ m: "1.5rem 2.5rem" }}>
       <FlexBetween>
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
         <Box>
@@ -88,12 +88,12 @@ export default function Dashboard() {
 
       <Box
         ref={gridRef}
-        mt="20px"
-        display="grid"
-        gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="160px"
-        gap="20px"
         sx={{
+          mt: "20px",
+          display: "grid",
+          gridTemplateColumns: "repeat(12, 1fr)",
+          gridAutoRows: "160px",
+          gap: "20px",
           "& > div": {
             gridColumn: isNonMediumScreen ? undefined : "span 12",
           },
@@ -207,9 +207,7 @@ export default function Dashboard() {
           </Typography>
           <BreakdownChart isDashboard={true} />
           <Typography
-            p="0 0.6rem"
-            fontSize="0.8rem"
-            sx={{ color: theme.palette.secondary[200] }}
+            sx={{ p: "0 0.6rem", fontSize: "0.8rem", color: theme.palette.secondary[200] }}
           >
             Breakdown of real states and information via category for revenue
             made for this year and total sales

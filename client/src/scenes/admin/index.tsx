@@ -10,7 +10,7 @@ export default function AdminScene() {
   const { data, isLoading, error } = useAdmins();
 
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box sx={{ m: "1.5rem 2.5rem" }}>
       <Header title="ADMINS" subtitle="Managing admins and list of admins" />
       <AsyncState isLoading={isLoading} error={error} data={data}>
         {(admins) => (

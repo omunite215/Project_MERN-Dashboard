@@ -35,7 +35,7 @@ export default function Performance() {
   const { data, isLoading, error } = useUserPerformance(USER_ID);
 
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box sx={{ m: "1.5rem 2.5rem" }}>
       <Header
         title="PERFORMANCE"
         subtitle="Track your Affiliate Sales Performance here"
@@ -56,13 +56,13 @@ export default function Performance() {
 
           return (
             <>
-              <Box display="flex" flexWrap="wrap" gap="1.5rem" mt="1rem">
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", mt: "1rem" }}>
                 {cards.map((c) => (
                   <Box
                     key={c.label}
-                    flex="1 1 12rem"
-                    p="1.25rem 1.5rem"
                     sx={{
+                      flex: "1 1 12rem",
+                      p: "1.25rem 1.5rem",
                       backgroundColor: theme.palette.background.alt,
                       borderRadius: "0.55rem",
                     }}
@@ -75,8 +75,7 @@ export default function Performance() {
                     </Typography>
                     <Typography
                       variant="h3"
-                      fontWeight="600"
-                      sx={{ color: theme.palette.secondary[200] }}
+                      sx={{ fontWeight: "600", color: theme.palette.secondary[200] }}
                     >
                       {c.value}
                     </Typography>
