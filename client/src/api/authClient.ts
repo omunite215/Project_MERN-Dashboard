@@ -13,10 +13,7 @@ export function refreshAccessToken(): Promise<string | null> {
       });
       if (!res.ok) return null;
       const data = (await res.json()) as { accessToken: string };
-      useAuthStore.getState().setAuth({
-        accessToken: data.accessToken,
-        user: useAuthStore.getState().user!,
-      });
+      useAuthStore.setState({ accessToken: data.accessToken });
       return data.accessToken;
     } catch {
       return null;
