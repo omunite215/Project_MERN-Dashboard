@@ -36,7 +36,7 @@ export const useAdmins = () =>
   useQuery({ queryKey: ["admins"], queryFn: () => apiGet<Admin[]>("management/admins") });
 
 export const useUserPerformance = (id: string) =>
-  useQuery({ queryKey: ["performance", id], queryFn: () => apiGet<UserPerformance>(`management/performance/${id}`) });
+  useQuery({ queryKey: ["performance", id], queryFn: () => apiGet<UserPerformance>(`management/performance/${id}`), enabled: !!id });
 
 export const useDashboard = () =>
   useQuery({ queryKey: ["dashboard"], queryFn: () => apiGet<DashboardStats>("general/dashboard") });

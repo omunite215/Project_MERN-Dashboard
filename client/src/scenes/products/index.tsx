@@ -192,6 +192,7 @@ export default function Products() {
       </AsyncState>
 
       <ProductForm
+        key={formState.initial?._id ?? "new"}
         open={formState.open}
         initial={formState.initial}
         onClose={() => setFormState({ open: false })}
