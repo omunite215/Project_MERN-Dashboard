@@ -10,7 +10,7 @@ beforeEach(async () => { await User.deleteMany({}); });
 describe("auth", () => {
   it("registers, hashes, returns access token + user (no password), forces role user", async () => {
     const res = await request(makeApp()).post("/auth/register")
-      .send({ name: "A", email: "a@x.co", password: "secret12" });
+      .send({ name: "Al", email: "a@x.co", password: "secret12" });
     expect(res.status).toBe(201);
     expect(res.body.accessToken).toBeTruthy();
     expect(res.body.user.password).toBeUndefined();
@@ -19,8 +19,8 @@ describe("auth", () => {
   });
   it("rejects duplicate email", async () => {
     const app = makeApp();
-    await request(app).post("/auth/register").send({ name: "A", email: "a@x.co", password: "secret12" });
-    const res = await request(app).post("/auth/register").send({ name: "B", email: "a@x.co", password: "secret12" });
+    await request(app).post("/auth/register").send({ name: "Al", email: "a@x.co", password: "secret12" });
+    const res = await request(app).post("/auth/register").send({ name: "Bo", email: "a@x.co", password: "secret12" });
     expect(res.status).toBe(409);
   });
   it("400s invalid register body", async () => {
@@ -29,13 +29,13 @@ describe("auth", () => {
   });
   it("logs in with correct password, 401 on wrong", async () => {
     const app = makeApp();
-    await request(app).post("/auth/register").send({ name: "A", email: "a@x.co", password: "secret12" });
+    await request(app).post("/auth/register").send({ name: "Al", email: "a@x.co", password: "secret12" });
     expect((await request(app).post("/auth/login").send({ email: "a@x.co", password: "secret12" })).status).toBe(200);
     expect((await request(app).post("/auth/login").send({ email: "a@x.co", password: "nope" })).status).toBe(401);
   });
   it("refresh issues a new access token from the cookie; me returns the user", async () => {
     const app = makeApp();
-    const reg = await request(app).post("/auth/register").send({ name: "A", email: "a@x.co", password: "secret12" });
+    const reg = await request(app).post("/auth/register").send({ name: "Al", email: "a@x.co", password: "secret12" });
     const cookie = reg.headers["set-cookie"];
     const refreshed = await request(app).post("/auth/refresh").set("Cookie", cookie);
     expect(refreshed.status).toBe(200);
@@ -46,5 +46,15 @@ describe("auth", () => {
   });
   it("me 401 without token", async () => {
     expect((await request(makeApp()).get("/auth/me")).status).toBe(401);
+  });
+  it("revokes refresh token on logout — POST /auth/refresh returns 401 after logout", async () => {
+    const app = makeApp();
+    const reg = await request(app).post("/auth/register").send({ name: "Al", email: "a@x.co", password: "secret12" });
+    expect(reg.status).toBe(201);
+    const cookie = reg.headers["set-cookie"];
+    const logout = await request(app).post("/auth/logout").set("Cookie", cookie);
+    expect(logout.status).toBe(204);
+    const refresh = await request(app).post("/auth/refresh").set("Cookie", cookie);
+    expect(refresh.status).toBe(401);
   });
 });
