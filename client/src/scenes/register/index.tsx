@@ -10,14 +10,7 @@ import { useForm } from "@tanstack/react-form";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useRegister } from "@/api/auth";
 import { registerSchema } from "@/validation/auth";
-
-/** Coerce a field error value to a display string (v1 errors may be unknown). */
-function toMsg(e: unknown): string {
-  if (typeof e === "string") return e;
-  if (e && typeof (e as { message?: unknown }).message === "string")
-    return (e as { message: string }).message;
-  return String(e);
-}
+import { toMsg } from "@/utils/formError";
 
 export default function Register() {
   const navigate = useNavigate();
