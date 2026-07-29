@@ -1,7 +1,7 @@
 import getCountryISO3 from "country-iso-2-to-3";
 import type { Request, Response } from "express";
 import { asyncHandler } from "../middlewares/asyncHandler.js";
-import { transactionQuerySchema } from "../validation/transaction.js";
+import type { TransactionQuery } from "../validation/transaction.js";
 import Product from "../models/Product.js";
 import ProductStat from "../models/ProductStat.js";
 import User from "../models/User.js";
@@ -26,7 +26,7 @@ export const getCustomers = asyncHandler(async (_req: Request, res: Response) =>
 });
 
 export const getTransactions = asyncHandler(async (req: Request, res: Response) => {
-  const { page, pageSize, sort, search } = transactionQuerySchema.parse(req.query);
+  const { page, pageSize, sort, search } = res.locals.query as TransactionQuery;
   const safeSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   // Search across cost, userId, and the stringified _id so a partial ID
   // (the most prominent column) also matches.

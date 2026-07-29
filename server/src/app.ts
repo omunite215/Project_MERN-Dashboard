@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { rateLimiter } from "./middlewares/rateLimiter.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
+import { authenticate } from "./middlewares/authenticate.js";
 import authRouter from "./routes/auth.js";
 import clientRouter from "./routes/client.js";
 import generalRouter from "./routes/general.js";
@@ -25,10 +26,10 @@ export function createApp(options: { clientOrigin?: string | string[] } = {}): E
 
   app.use("/auth", authRouter);
 
-  app.use("/client", clientRouter);
-  app.use("/general", generalRouter);
-  app.use("/management", managementRouter);
-  app.use("/sales", salesRouter);
+  app.use("/client", authenticate, clientRouter);
+  app.use("/general", authenticate, generalRouter);
+  app.use("/management", authenticate, managementRouter);
+  app.use("/sales", authenticate, salesRouter);
 
   app.use(notFound);
   app.use(errorHandler);
