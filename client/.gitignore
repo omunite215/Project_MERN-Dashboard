@@ -11,6 +11,11 @@
 # production
 /build
 
+# build tooling artifacts
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+
 # misc
 .DS_Store
 .env.local
