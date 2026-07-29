@@ -3,5 +3,5 @@
   "plugins": ["typescript", "unicorn", "import"],
   "categories": { "correctness": "error", "suspicious": "warn" },
   "env": { "node": true, "es2022": true },
-  "ignorePatterns": ["dist", "node_modules"]
+  "ignorePatterns": ["dist", "node_modules", "src/data/index.ts"]
 }

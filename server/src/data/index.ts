@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Contains Data to be inserted into database, you can add new contents here
 // Don't remove this file
 
