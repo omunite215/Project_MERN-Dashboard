@@ -1,12 +1,10 @@
-import mongoose, { type InferSchemaType } from "mongoose";
+import { prop, getModelForClass, modelOptions } from "@typegoose/typegoose";
+import { Types } from "mongoose";
 
-const AffiliateStatSchema = new mongoose.Schema(
-  {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    affiliateSales: { type: [mongoose.Schema.Types.ObjectId], ref: "Transaction", default: [] },
-  },
-  { timestamps: true }
-);
+@modelOptions({ schemaOptions: { timestamps: true } })
+export class AffiliateStat {
+  @prop() public userId?: Types.ObjectId; // TODO(1.3): switch to Ref<User> once User is a Typegoose class
+  @prop({ type: () => [Types.ObjectId], default: [] }) public affiliateSales?: Types.ObjectId[];
+}
 
-export type IAffiliateStat = InferSchemaType<typeof AffiliateStatSchema>;
-export default mongoose.model("AffiliateStat", AffiliateStatSchema);
+export default getModelForClass(AffiliateStat);

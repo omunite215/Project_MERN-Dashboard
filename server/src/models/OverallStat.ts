@@ -1,17 +1,26 @@
-import mongoose, { type InferSchemaType } from "mongoose";
+import { prop, getModelForClass, modelOptions } from "@typegoose/typegoose";
 
-const OverallStatSchema = new mongoose.Schema(
-  {
-    totalCustomers: Number,
-    yearlySalesTotal: Number,
-    yearlyTotalSoldUnits: Number,
-    year: Number,
-    monthlyData: [{ month: String, totalSales: Number, totalUnits: Number }],
-    dailyData: [{ date: String, totalSales: Number, totalUnits: Number }],
-    salesByCategory: { type: Map, of: Number },
-  },
-  { timestamps: true }
-);
+class OverallStatMonthlyDatum {
+  @prop() public month?: string;
+  @prop() public totalSales?: number;
+  @prop() public totalUnits?: number;
+}
 
-export type IOverallStat = InferSchemaType<typeof OverallStatSchema>;
-export default mongoose.model("OverallStat", OverallStatSchema);
+class OverallStatDailyDatum {
+  @prop() public date?: string;
+  @prop() public totalSales?: number;
+  @prop() public totalUnits?: number;
+}
+
+@modelOptions({ schemaOptions: { timestamps: true } })
+export class OverallStat {
+  @prop() public totalCustomers?: number;
+  @prop() public yearlySalesTotal?: number;
+  @prop() public yearlyTotalSoldUnits?: number;
+  @prop() public year?: number;
+  @prop({ type: () => [OverallStatMonthlyDatum], default: [] }) public monthlyData?: OverallStatMonthlyDatum[];
+  @prop({ type: () => [OverallStatDailyDatum], default: [] }) public dailyData?: OverallStatDailyDatum[];
+  @prop({ type: () => Number }) public salesByCategory?: Map<string, number>;
+}
+
+export default getModelForClass(OverallStat);

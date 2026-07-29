@@ -1,16 +1,25 @@
-import mongoose, { type InferSchemaType } from "mongoose";
+import { prop, getModelForClass, modelOptions } from "@typegoose/typegoose";
 
-const ProductStatSchema = new mongoose.Schema(
-  {
-    productId: String,
-    yearlySalesTotal: Number,
-    yearlyTotalSoldUnits: Number,
-    year: Number,
-    monthlyData: [{ month: String, totalSales: Number, totalUnits: Number }],
-    dailyData: [{ date: String, totalSales: Number, totalUnits: Number }],
-  },
-  { timestamps: true }
-);
+class ProductStatMonthlyDatum {
+  @prop() public month?: string;
+  @prop() public totalSales?: number;
+  @prop() public totalUnits?: number;
+}
 
-export type IProductStat = InferSchemaType<typeof ProductStatSchema>;
-export default mongoose.model("ProductStat", ProductStatSchema);
+class ProductStatDailyDatum {
+  @prop() public date?: string;
+  @prop() public totalSales?: number;
+  @prop() public totalUnits?: number;
+}
+
+@modelOptions({ schemaOptions: { timestamps: true } })
+export class ProductStat {
+  @prop() public productId?: string;
+  @prop() public yearlySalesTotal?: number;
+  @prop() public yearlyTotalSoldUnits?: number;
+  @prop() public year?: number;
+  @prop({ type: () => [ProductStatMonthlyDatum], default: [] }) public monthlyData?: ProductStatMonthlyDatum[];
+  @prop({ type: () => [ProductStatDailyDatum], default: [] }) public dailyData?: ProductStatDailyDatum[];
+}
+
+export default getModelForClass(ProductStat);

@@ -1,16 +1,13 @@
-import mongoose, { type InferSchemaType } from "mongoose";
+import { prop, getModelForClass, modelOptions } from "@typegoose/typegoose";
 
-const ProductSchema = new mongoose.Schema(
-  {
-    name: String,
-    price: Number,
-    description: String,
-    category: String,
-    rating: Number,
-    supply: Number,
-  },
-  { timestamps: true }
-);
+@modelOptions({ schemaOptions: { timestamps: true } })
+export class Product {
+  @prop() public name?: string;
+  @prop() public price?: number;
+  @prop() public description?: string;
+  @prop() public category?: string;
+  @prop() public rating?: number;
+  @prop() public supply?: number;
+}
 
-export type IProduct = InferSchemaType<typeof ProductSchema>;
-export default mongoose.model("Product", ProductSchema);
+export default getModelForClass(Product);

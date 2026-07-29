@@ -1,13 +1,11 @@
-import mongoose, { type InferSchemaType } from "mongoose";
+import { prop, getModelForClass, modelOptions } from "@typegoose/typegoose";
+import { Types } from "mongoose";
 
-const TransactionSchema = new mongoose.Schema(
-  {
-    userId: String,
-    cost: String,
-    products: { type: [mongoose.Schema.Types.ObjectId], default: [] },
-  },
-  { timestamps: true }
-);
+@modelOptions({ schemaOptions: { timestamps: true } })
+export class Transaction {
+  @prop() public userId?: string;
+  @prop() public cost?: string;
+  @prop({ type: () => [Types.ObjectId], default: [] }) public products?: Types.ObjectId[];
+}
 
-export type ITransaction = InferSchemaType<typeof TransactionSchema>;
-export default mongoose.model("Transaction", TransactionSchema);
+export default getModelForClass(Transaction);
