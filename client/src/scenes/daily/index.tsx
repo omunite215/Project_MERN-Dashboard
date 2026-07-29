@@ -1,8 +1,9 @@
 import { useMemo } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import DatePicker from "react-datepicker";
 import Header from "@/components/Header";
 import LineChartCard from "@/components/LineChartCard";
+import AsyncState from "@/components/AsyncState";
 import { useDateRange } from "@/hooks/useDateRange";
 import { useSales } from "@/api/queries";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,7 +13,7 @@ export default function Daily() {
     new Date("2021-02-01"),
     new Date("2021-03-01")
   );
-  const { data } = useSales();
+  const { data, isLoading, error } = useSales();
   const theme = useTheme();
 
   const [formattedData] = useMemo(() => {
@@ -47,36 +48,34 @@ export default function Daily() {
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="DAILY SALES" subtitle="Chart of daily sales" />
-      {data ? (
-        <Box height="75vh">
-          <Box display="flex" justifyContent="flex-end">
-            <Box>
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => date && setStartDate(date)}
-                selectsStart
-                startDate={startDate}
-                endDate={endDate}
-              />
+      <AsyncState isLoading={isLoading} error={error} data={data}>
+        {() => (
+          <Box height="75vh">
+            <Box display="flex" justifyContent="flex-end">
+              <Box>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => date && setStartDate(date)}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              </Box>
+              <Box>
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => date && setEndDate(date)}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={startDate}
+                />
+              </Box>
             </Box>
-            <Box>
-              <DatePicker
-                selected={endDate}
-                onChange={(date) => date && setEndDate(date)}
-                selectsEnd
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate}
-              />
-            </Box>
+            <LineChartCard data={formattedData ?? []} />
           </Box>
-          <LineChartCard data={formattedData ?? []} />
-        </Box>
-      ) : (
-        <Typography variant="h5" mt="20%" textAlign="center">
-          Loading...
-        </Typography>
-      )}
+        )}
+      </AsyncState>
     </Box>
   );
 }

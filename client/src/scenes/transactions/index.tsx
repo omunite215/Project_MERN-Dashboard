@@ -4,6 +4,7 @@ import { Box } from "@mui/material";
 import Header from "@/components/Header";
 import DataGridCustomToolbar from "@/components/DataGridCustomToolbar";
 import DataTable from "@/components/DataTable";
+import AsyncState from "@/components/AsyncState";
 import { useTransactions } from "@/api/queries";
 import type { Transaction } from "@/api/types";
 
@@ -33,7 +34,7 @@ export default function Transactions() {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
-  const { data, isLoading } = useTransactions({
+  const { data, isLoading, error } = useTransactions({
     page,
     pageSize,
     sort: JSON.stringify(sort),
@@ -52,26 +53,30 @@ export default function Transactions() {
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="TRANSACTIONS" subtitle="Entire list of transactions" />
-      <DataTable
-        rows={data?.transactions ?? []}
-        columns={columns}
-        loading={isLoading || !data}
-        getRowId={(row) => row._id}
-        height="80vh"
-        server={{
-          paginationMode: "server",
-          sortingMode: "server",
-          rowCount: data?.total ?? 0,
-          paginationModel: { page, pageSize },
-          onPaginationModelChange: handlePaginationModelChange,
-          onSortModelChange: handleSortModelChange,
-          pageSizeOptions: [20, 50, 100],
-        }}
-        slots={{ toolbar: DataGridCustomToolbar }}
-        slotProps={{
-          toolbar: { searchInput, setSearchInput, setSearch },
-        }}
-      />
+      <AsyncState isLoading={isLoading} error={error} data={data}>
+        {(txData) => (
+          <DataTable
+            rows={txData.transactions}
+            columns={columns}
+            loading={isLoading}
+            getRowId={(row) => row._id}
+            height="80vh"
+            server={{
+              paginationMode: "server",
+              sortingMode: "server",
+              rowCount: txData.total,
+              paginationModel: { page, pageSize },
+              onPaginationModelChange: handlePaginationModelChange,
+              onSortModelChange: handleSortModelChange,
+              pageSizeOptions: [20, 50, 100],
+            }}
+            slots={{ toolbar: DataGridCustomToolbar }}
+            slotProps={{
+              toolbar: { searchInput, setSearchInput, setSearch },
+            }}
+          />
+        )}
+      </AsyncState>
     </Box>
   );
 }

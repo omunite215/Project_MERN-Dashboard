@@ -21,6 +21,7 @@ import StatBox from "@/components/StatBox";
 import DataTable from "@/components/DataTable";
 import { useDashboard } from "@/api/queries";
 import type { Transaction } from "@/api/types";
+import AsyncState from "@/components/AsyncState";
 
 const columns: GridColDef<Transaction>[] = [
   { field: "_id", headerName: "ID", flex: 1 },
@@ -44,7 +45,20 @@ const columns: GridColDef<Transaction>[] = [
 export default function Dashboard() {
   const theme = useTheme();
   const isNonMediumScreen = useMediaQuery("(min-width: 1200px)");
-  const { data, isLoading } = useDashboard();
+  const { data, isLoading, error } = useDashboard();
+
+  if (error) {
+    return (
+      <Box m="1.5rem 2.5rem">
+        <FlexBetween>
+          <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        </FlexBetween>
+        <AsyncState isLoading={false} error={error} data={undefined}>
+          {() => null}
+        </AsyncState>
+      </Box>
+    );
+  }
 
   return (
     <Box m="1.5rem 2.5rem">

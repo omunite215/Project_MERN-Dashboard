@@ -1,11 +1,12 @@
 import { useMemo } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import Header from "@/components/Header";
 import LineChartCard from "@/components/LineChartCard";
+import AsyncState from "@/components/AsyncState";
 import { useSales } from "@/api/queries";
 
 export default function Monthly() {
-  const { data } = useSales();
+  const { data, isLoading, error } = useSales();
   const theme = useTheme();
 
   const [formattedData] = useMemo(() => {
@@ -36,15 +37,13 @@ export default function Monthly() {
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="MONTHLY SALES" subtitle="Chart of monthly sales" />
-      {data ? (
-        <Box height="75vh">
-          <LineChartCard data={formattedData ?? []} />
-        </Box>
-      ) : (
-        <Typography variant="h5" mt="20%" textAlign="center">
-          Loading...
-        </Typography>
-      )}
+      <AsyncState isLoading={isLoading} error={error} data={data}>
+        {() => (
+          <Box height="75vh">
+            <LineChartCard data={formattedData ?? []} />
+          </Box>
+        )}
+      </AsyncState>
     </Box>
   );
 }

@@ -12,6 +12,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Header from "@/components/Header";
+import AsyncState from "@/components/AsyncState";
 import { useProducts } from "@/api/queries";
 import type { Product } from "@/api/types";
 
@@ -86,33 +87,31 @@ const ProductCard = ({
 };
 
 export default function Products() {
-  const { data, isLoading } = useProducts();
+  const { data, isLoading, error } = useProducts();
   const isNonMobile = useMediaQuery("(min-width: 1000px)");
 
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="PRODUCTS" subtitle="See your list of products." />
-      {data || !isLoading ? (
-        <Box
-          mt="20px"
-          display="grid"
-          gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-          justifyContent="space-between"
-          rowGap="20px"
-          columnGap="1.33%"
-          sx={{
-            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-          }}
-        >
-          {data?.map((product) => (
-            <ProductCard key={product._id} {...product} />
-          ))}
-        </Box>
-      ) : (
-        <Typography variant="h5" mt="20%" textAlign="center">
-          Loading...
-        </Typography>
-      )}
+      <AsyncState isLoading={isLoading} error={error} data={data}>
+        {(products) => (
+          <Box
+            mt="20px"
+            display="grid"
+            gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+            justifyContent="space-between"
+            rowGap="20px"
+            columnGap="1.33%"
+            sx={{
+              "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+            }}
+          >
+            {products.map((product) => (
+              <ProductCard key={product._id} {...product} />
+            ))}
+          </Box>
+        )}
+      </AsyncState>
     </Box>
   );
 }

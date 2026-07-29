@@ -3,6 +3,7 @@ import { type GridColDef } from "@mui/x-data-grid";
 import Header from "@/components/Header";
 import CustomColumnMenu from "@/components/DataGridCustomColumnMenu";
 import DataTable from "@/components/DataTable";
+import AsyncState from "@/components/AsyncState";
 import { useUserPerformance } from "@/api/queries";
 import { USER_ID } from "@/config/constants";
 import type { Transaction } from "@/api/types";
@@ -27,7 +28,7 @@ const columns: GridColDef<Transaction>[] = [
 ];
 
 export default function Performance() {
-  const { data, isLoading } = useUserPerformance(USER_ID);
+  const { data, isLoading, error } = useUserPerformance(USER_ID);
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -35,15 +36,19 @@ export default function Performance() {
         title="PERFORMANCE"
         subtitle="Track your Affiliate Sales Performance here"
       />
-      <DataTable
-        rows={data?.sales ?? []}
-        columns={columns}
-        loading={isLoading || !data}
-        getRowId={(row) => row._id}
-        height="75vh"
-        mt="40px"
-        slots={{ columnMenu: CustomColumnMenu }}
-      />
+      <AsyncState isLoading={isLoading} error={error} data={data}>
+        {(perf) => (
+          <DataTable
+            rows={perf.sales}
+            columns={columns}
+            loading={false}
+            getRowId={(row) => row._id}
+            height="75vh"
+            mt="40px"
+            slots={{ columnMenu: CustomColumnMenu }}
+          />
+        )}
+      </AsyncState>
     </Box>
   );
 }
