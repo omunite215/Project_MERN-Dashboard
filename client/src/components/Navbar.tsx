@@ -21,8 +21,10 @@ import {
   GitHub,
 } from "@mui/icons-material";
 import type { Dispatch, SetStateAction } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import type { User } from "@/api/types";
 import { useThemeStore } from "@/store/useThemeStore";
+import { navItems } from "@/config/navItems";
 import FlexBetween from "@/components/FlexBetween";
 import profileImage from "@/assets/profile.jpeg";
 
@@ -35,12 +37,25 @@ interface NavbarProps {
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }: NavbarProps) => {
   const toggleMode = useThemeStore((s) => s.toggleMode);
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isOpen = Boolean(anchorEl);
+  const [query, setQuery] = useState("");
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
+
+  // Quick navigation: jump to the first page whose name matches the query.
+  const runSearch = () => {
+    const q = query.trim().toLowerCase();
+    if (!q) return;
+    const match = navItems.find((item) => item.path && item.text.toLowerCase().includes(q));
+    if (match?.path) {
+      navigate({ to: `/${match.path}` as never });
+      setQuery("");
+    }
+  };
 
   return (
     <AppBar
@@ -66,10 +81,17 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }: NavbarProps) => {
               gap: "3rem",
               p: "0.1rem 1.5rem",
             }}
-            title="Search"
+            title="Search — jump to a page"
           >
-            <InputBase placeholder="Search..." />
-            <IconButton>
+            <InputBase
+              placeholder="Search..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") runSearch();
+              }}
+            />
+            <IconButton onClick={runSearch} title="Go">
               <Search />
             </IconButton>
           </FlexBetween>

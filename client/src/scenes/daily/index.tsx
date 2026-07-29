@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import Header from "@/components/Header";
 import LineChartCard from "@/components/LineChartCard";
 import AsyncState from "@/components/AsyncState";
+import DatePickerInput from "@/components/DatePickerInput";
 import { useDateRange } from "@/hooks/useDateRange";
 import { useSales } from "@/api/queries";
 import "react-datepicker/dist/react-datepicker.css";
@@ -51,26 +52,24 @@ export default function Daily() {
       <AsyncState isLoading={isLoading} error={error} data={data}>
         {() => (
           <Box height="75vh">
-            <Box display="flex" justifyContent="flex-end">
-              <Box>
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => date && setStartDate(date)}
-                  selectsStart
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-              </Box>
-              <Box>
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => date && setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  minDate={startDate}
-                />
-              </Box>
+            <Box display="flex" justifyContent="flex-end" gap="0.75rem" mb="1rem">
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => date && setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                customInput={<DatePickerInput label="Start date" />}
+              />
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => date && setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                customInput={<DatePickerInput label="End date" />}
+              />
             </Box>
             <LineChartCard data={formattedData ?? []} />
           </Box>

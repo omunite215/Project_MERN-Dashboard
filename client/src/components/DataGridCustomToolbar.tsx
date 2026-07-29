@@ -35,6 +35,12 @@ const DataGridCustomToolbar = ({
           label="Search..."
           sx={{ mb: "0.5rem", width: "15rem" }}
           onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setSearch(searchInput);
+              setSearchInput("");
+            }
+          }}
           value={searchInput}
           variant="standard"
           InputProps={{

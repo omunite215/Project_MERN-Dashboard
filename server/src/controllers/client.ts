@@ -25,10 +25,21 @@ export const getCustomers = asyncHandler(async (_req: Request, res: Response) =>
 export const getTransactions = asyncHandler(async (req: Request, res: Response) => {
   const { page, pageSize, sort, search } = transactionQuerySchema.parse(req.query);
   const safeSearch = _.escapeRegExp(search);
+  // Search across cost, userId, and the stringified _id so a partial ID
+  // (the most prominent column) also matches.
   const filter = {
     $or: [
       { cost: { $regex: safeSearch, $options: "i" } },
       { userId: { $regex: safeSearch, $options: "i" } },
+      {
+        $expr: {
+          $regexMatch: {
+            input: { $toString: "$_id" },
+            regex: safeSearch,
+            options: "i",
+          },
+        },
+      },
     ],
   };
   const sortFormatted = sort ? { [sort.field]: sort.sort === "asc" ? 1 : -1 } : {};
