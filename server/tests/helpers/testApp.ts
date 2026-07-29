@@ -15,5 +15,5 @@ export async function closeTestDB() {
 }
 
 export function makeApp() {
-  return createApp({ clientOrigin: "http://localhost:3000" });
+  return createApp({ clientOrigin: ["http://localhost:3000"] });
 }

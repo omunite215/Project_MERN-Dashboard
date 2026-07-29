@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import { env } from "./config/env.js";
 import { rateLimiter } from "./middlewares/rateLimiter.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
@@ -13,14 +14,24 @@ import managementRouter from "./routes/management.js";
 import salesRouter from "./routes/sales.js";
 import productsRouter from "./routes/products.js";
 
-export function createApp(options: { clientOrigin?: string | string[] } = {}): Express {
+export function createApp(options: { clientOrigin?: string[] } = {}): Express {
   const app = express();
+
+  app.set("trust proxy", env.TRUST_PROXY);
+
+  const origins = options.clientOrigin ?? ["http://localhost:3000"];
 
   app.use(express.json());
   app.use(helmet());
   app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
   app.use(morgan(process.env.NODE_ENV === "test" ? "tiny" : "common"));
-  app.use(cors({ origin: options.clientOrigin ?? true, credentials: true }));
+  app.use(cors({
+    origin(origin, cb) {
+      if (!origin || origins.includes(origin)) return cb(null, true);
+      cb(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  }));
   app.use(rateLimiter);
 
   app.get("/health", (_req, res) => res.json({ status: "ok" }));
