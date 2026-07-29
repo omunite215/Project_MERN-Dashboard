@@ -17,4 +17,10 @@ export class ApiError extends Error {
   static internal(message = "Internal Server Error") {
     return new ApiError(500, message);
   }
+  static unauthorized(message = "Unauthorized") {
+    return new ApiError(401, message);
+  }
+  static forbidden(message = "Forbidden") {
+    return new ApiError(403, message);
+  }
 }
