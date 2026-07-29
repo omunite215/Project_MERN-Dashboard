@@ -10,7 +10,7 @@ export const useUser = (id: string = USER_ID) =>
   useQuery({ queryKey: ["user", id], queryFn: () => apiGet<User>(`general/user/${id}`) });
 
 export const useProducts = () =>
-  useQuery({ queryKey: ["products"], queryFn: () => apiGet<Product[]>("client/products") });
+  useQuery({ queryKey: ["products"], queryFn: () => apiGet<Product[]>("products") });
 
 export const useCustomers = () =>
   useQuery({ queryKey: ["customers"], queryFn: () => apiGet<Customer[]>("client/customers") });
