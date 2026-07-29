@@ -5,7 +5,7 @@ import CustomColumnMenu from "@/components/DataGridCustomColumnMenu";
 import DataTable from "@/components/DataTable";
 import AsyncState from "@/components/AsyncState";
 import { useUserPerformance } from "@/api/queries";
-import { USER_ID } from "@/config/constants";
+import { useAuthStore } from "@/store/useAuthStore";
 import type { Transaction } from "@/api/types";
 
 const columns: GridColDef<Transaction>[] = [
@@ -32,7 +32,8 @@ const currency = (n: number) =>
 
 export default function Performance() {
   const theme = useTheme();
-  const { data, isLoading, error } = useUserPerformance(USER_ID);
+  const userId = useAuthStore((s) => s.user?._id ?? "");
+  const { data, isLoading, error } = useUserPerformance(userId);
 
   return (
     <Box sx={{ m: "1.5rem 2.5rem" }}>

@@ -20,13 +20,12 @@ import {
   ChevronRightOutlined,
 } from "@mui/icons-material";
 import type { Dispatch, SetStateAction } from "react";
-import type { User } from "@/api/types";
+import { useAuthStore } from "@/store/useAuthStore";
 import { navItems } from "@/config/navItems";
 import FlexBetween from "@/components/FlexBetween";
 import profileImage from "@/assets/profile.jpeg";
 
 interface SidebarProps {
-  user: Partial<User>;
   isNonMobile: boolean;
   drawerWidth: string;
   isSidebarOpen: boolean;
@@ -34,12 +33,12 @@ interface SidebarProps {
 }
 
 const Sidebar = ({
-  user,
   isNonMobile,
   drawerWidth,
   isSidebarOpen,
   setIsSidebarOpen,
 }: SidebarProps) => {
+  const user = useAuthStore((s) => s.user);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [active, setActive] = useState("");
   const navigate = useNavigate();
@@ -164,12 +163,12 @@ const Sidebar = ({
                 <Typography
                   sx={{ fontWeight: "bold", fontSize: "0.9rem", color: theme.palette.secondary[100] }}
                 >
-                  {user.name}
+                  {user?.name}
                 </Typography>
                 <Typography
                   sx={{ fontSize: "0.8rem", color: theme.palette.secondary[200] }}
                 >
-                  {user.occupation}
+                  {user?.occupation}
                 </Typography>
               </Box>
               <SettingsOutlined

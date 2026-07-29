@@ -22,22 +22,24 @@ import {
 } from "@mui/icons-material";
 import type { Dispatch, SetStateAction } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import type { User } from "@/api/types";
 import { useThemeStore } from "@/store/useThemeStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useLogout } from "@/api/auth";
 import { navItems } from "@/config/navItems";
 import FlexBetween from "@/components/FlexBetween";
 import profileImage from "@/assets/profile.jpeg";
 
 interface NavbarProps {
-  user: Partial<User>;
   isSidebarOpen: boolean;
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }: NavbarProps) => {
+const Navbar = ({ isSidebarOpen, setIsSidebarOpen }: NavbarProps) => {
   const toggleMode = useThemeStore((s) => s.toggleMode);
   const theme = useTheme();
   const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
+  const logout = useLogout();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isOpen = Boolean(anchorEl);
@@ -133,7 +135,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }: NavbarProps) => {
                 textTransform: "none",
                 gap: "1rem",
               }}
-              title={user.name}
+              title={user?.name}
             >
               <Box
                 component="img"
@@ -145,12 +147,12 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }: NavbarProps) => {
                 <Typography
                   sx={{ fontWeight: "bold", fontSize: "0.85rem", color: theme.palette.secondary[100] }}
                 >
-                  {user.name}
+                  {user?.name}
                 </Typography>
                 <Typography
                   sx={{ fontSize: "0.75rem", color: theme.palette.secondary[200] }}
                 >
-                  {user.occupation}
+                  {user?.occupation}
                 </Typography>
               </Box>
               <ArrowDropDownOutlined
@@ -167,7 +169,13 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }: NavbarProps) => {
               onClose={handleClose}
               anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-              <MenuItem onClick={handleClose} title="Log Out">
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  logout.mutate(undefined, { onSettled: () => navigate({ to: "/login" }) });
+                }}
+                title="Log Out"
+              >
                 Log Out
               </MenuItem>
             </Menu>

@@ -1,13 +1,9 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { apiGet } from "./http";
-import { USER_ID } from "@/config/constants";
 import type {
-  User, Product, Customer, TransactionsResponse, GeographyDatum,
+  Product, Customer, TransactionsResponse, GeographyDatum,
   Sales, Admin, UserPerformance, DashboardStats,
 } from "./types";
-
-export const useUser = (id: string = USER_ID) =>
-  useQuery({ queryKey: ["user", id], queryFn: () => apiGet<User>(`general/user/${id}`) });
 
 export const useProducts = () =>
   useQuery({ queryKey: ["products"], queryFn: () => apiGet<Product[]>("products") });
