@@ -11,6 +11,7 @@ import clientRouter from "./routes/client.js";
 import generalRouter from "./routes/general.js";
 import managementRouter from "./routes/management.js";
 import salesRouter from "./routes/sales.js";
+import productsRouter from "./routes/products.js";
 
 export function createApp(options: { clientOrigin?: string | string[] } = {}): Express {
   const app = express();
@@ -26,6 +27,7 @@ export function createApp(options: { clientOrigin?: string | string[] } = {}): E
 
   app.use("/auth", authRouter);
 
+  app.use("/products", productsRouter);
   app.use("/client", authenticate, clientRouter);
   app.use("/general", authenticate, generalRouter);
   app.use("/management", authenticate, managementRouter);
