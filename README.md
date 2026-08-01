@@ -11,10 +11,8 @@
 <!-- HEADER (text title + tagline; logo lives at the END) -->
 <div align="center">
   <h1>EcomVision — MERN Admin Dashboard</h1>
-  <p><b>A modern full-stack analytics dashboard: a Vite + TypeScript React front end backed by a typed, tested Express API.</b></p>
+  <p><b>An authenticated, role-based e-commerce analytics dashboard: a React + TypeScript SPA backed by a Bun-native, typed, tested Express API.</b></p>
   <p>
-    <a href="{{DEMO_URL}}"><strong>View Demo »</strong></a>
-    &nbsp;·&nbsp;
     <a href="https://github.com/omunite215/Project_MERN-Dashboard/issues/new?labels=bug">Report Bug</a>
     &nbsp;·&nbsp;
     <a href="https://github.com/omunite215/Project_MERN-Dashboard/issues/new?labels=enhancement">Request Feature</a>
@@ -38,6 +36,7 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#testing">Testing</a></li>
+    <li><a href="#deployment">Deployment</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -48,9 +47,11 @@
 
 ## About The Project
 
-EcomVision is an admin dashboard for a fictional e-commerce business. It visualises sales, products, customers, transactions and geography, and exposes management views for admins and user performance. The front end is a single-page React app built with Vite and TypeScript; the back end is a typed Express API over MongoDB.
+<p align="center"><img src="client/public/screenshot.png" alt="EcomVision dashboard" width="900" /></p>
 
-The project was modernised end to end: the client moved from Create React App to Vite with Zustand for UI state and the TanStack ecosystem (Query for data, Router for routing), and the server was migrated to TypeScript with zod-validated configuration, a global error pipeline, rate limiting, and an automated test suite.
+EcomVision is an admin dashboard for a fictional e-commerce business. It visualises sales, products, customers, transactions and geography, adds tiered role-based access control, and turns Products into a full create/edit/delete workflow. The front end is a single-page React app built with Vite and TypeScript; the back end is a typed Express API that runs on the Bun runtime over MongoDB.
+
+The project was modernised end to end. The client moved from Create React App to Vite with Zustand for UI state and the TanStack ecosystem (Query for data, Router for routing, Form for forms). The server was migrated to TypeScript on the Bun runtime with Typegoose models, zod-validated configuration and requests, a global error pipeline, and an automated test suite. On top of that foundation sits JWT authentication with a short-lived access token in memory and a refresh token in an httpOnly cookie, role-based authorization, and a Products CRUD exemplar validated on both the client and the server.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -63,13 +64,14 @@ The project was modernised end to end: the client moved from Create React App to
 [![TanStack Query][TQ-badge]][TQ-url]
 [![TanStack Router][TR-badge]][TR-url]
 [![Zustand][Zustand-badge]][Zustand-url]
+[![Zod][zod-badge]][zod-url]
 [![GSAP][GSAP-badge]][GSAP-url]
 
 [![Bun][Bun-badge]][Bun-url]
-[![Node][Node-badge]][Node-url]
 [![Express][Express-badge]][Express-url]
 [![MongoDB][MongoDB-badge]][MongoDB-url]
 [![Mongoose][Mongoose-badge]][Mongoose-url]
+[![JWT][JWT-badge]][JWT-url]
 [![Vitest][Vitest-badge]][Vitest-url]
 [![oxlint][oxlint-badge]][oxlint-url]
 
@@ -77,16 +79,18 @@ The project was modernised end to end: the client moved from Create React App to
 
 ## Features
 
-- **Overview dashboard** — KPI stat boxes, a sales overview line chart, a sales-by-category breakdown, and a recent-transactions grid.
-- **Products** — catalogue of product cards with expandable details, animated with GSAP.
+- **Authentication** — register and login with a short-lived JWT access token held in memory and a long-lived refresh token in an httpOnly, secure, sameSite cookie. Sessions survive reloads via a silent refresh, and a `tokenVersion` allows server-side revocation.
+- **Role-based access control** — any authenticated user can view; `admin` and `superadmin` can mutate; `superadmin` is reserved for user management. Mutation controls are hidden in the UI and enforced by middleware on the API.
+- **Products CRUD** — role-gated add / edit / delete with a zod-validated form (TanStack Form) that mirrors the server schema, optimistic query invalidation, and confirm-before-delete.
+- **Overview dashboard** — KPI stat boxes, a sales overview line chart, a sales-by-category breakdown, a recent-transactions grid, and a one-click **CSV report export**.
 - **Customers & Admins** — data grids backed by MUI X DataGrid with column menu, density, export and quick filtering.
 - **Transactions** — server-side pagination, sorting and search.
 - **Geography** — a Nivo choropleth of users by country.
 - **Sales views** — Overview (sales/units toggle), Daily (with a date-range filter) and Monthly line charts.
-- **Performance** — per-user affiliate sales.
-- **Dark / light theme** — toggled via Zustand and persisted to local storage.
-- **Typed REST API** — Express + TypeScript with zod environment and request validation, a global error handler, 404 handling, and IP rate limiting.
-- **Tested back end** — Vitest + supertest against an in-memory MongoDB.
+- **Performance** — per-user affiliate sales, with a graceful fallback to the user's own transactions.
+- **Quick navigation & settings** — a header search with live page suggestions, plus a settings menu showing the signed-in account and a dark / light theme toggle.
+- **Typed, validated API** — Express 5 on Bun with Typegoose models, a reusable zod `validate` middleware on every route, a global error handler, 404 handling, helmet, a CORS allow-list, and per-route rate limiting.
+- **Tested back end** — `bun test` (bun:test) with supertest against an in-memory MongoDB; the client is tested with Vitest and React Testing Library.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -94,7 +98,7 @@ The project was modernised end to end: the client moved from Create React App to
 
 <p align="center"><img src="client/public/architecture.png" alt="System architecture diagram" width="820" /></p>
 
-The browser loads the React SPA (Vite). TanStack Router drives navigation, TanStack Query manages server state through a small `apiGet` fetch wrapper pointed at `VITE_BASE_URL`, Zustand holds UI state (theme), and MUI, Nivo and GSAP render the interface. Requests hit the Express API, which layers helmet, CORS, a rate limiter and morgan before routing to controllers and typed Mongoose models over MongoDB. Configuration is validated with zod and errors flow through a single error pipeline. The editable source of this diagram lives at [`docs/architecture.drawio`](docs/architecture.drawio).
+The browser loads the React SPA (Vite). TanStack Router drives navigation and guards the dashboard, TanStack Query manages server state through an auth-aware `apiFetch` wrapper that attaches the access token and silently refreshes on a 401, and Zustand holds the in-memory auth and theme state. Requests hit the Express API, which layers helmet, a CORS allow-list, rate limiting and morgan, then `authenticate` / `authorize` middleware and a zod `validate` step before routing to thin controllers over typed Typegoose/Mongoose models on MongoDB. Passwords are hashed with argon2id (`Bun.password`), JWTs are signed with `jose`, configuration is validated with zod at startup, and errors flow through a single pipeline. The editable source of this diagram lives at [`client/public/architecture.drawio`](client/public/architecture.drawio).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -103,7 +107,6 @@ The browser loads the React SPA (Vite). TanStack Router drives navigation, TanSt
 ### Prerequisites
 
 - [Bun](https://bun.sh) `>= 1.3`
-- [Node.js](https://nodejs.org) `>= 18`
 - A MongoDB connection string (local or [MongoDB Atlas](https://www.mongodb.com/atlas))
 
 ### Installation
@@ -117,24 +120,32 @@ The browser loads the React SPA (Vite). TanStack Router drives navigation, TanSt
    ```bash
    cd server
    bun install
-   cp .env.example .env        # then set MONGODB_URL
+   cp .env.example .env        # set MONGODB_URL, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET
    bun run seed                # first run only — loads the sample data
+   bun run hash-passwords      # first run only — argon2-hashes the seeded passwords
    bun run dev                 # http://localhost:5001
    ```
 3. Start the client (in a second terminal)
    ```bash
    cd client
-   bun install                 # .env already sets VITE_BASE_URL=http://localhost:5001
+   bun install                 # set VITE_BASE_URL=http://localhost:5001 in client/.env
    bun run dev                 # http://localhost:3000
    ```
+
+Once the passwords are hashed you can sign in with the seeded superadmin — `kranstead0@narod.ru` / `omMDCh` — or register a new account (new accounts are always created with the `user` role).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Usage
 
-Open `http://localhost:3000` and navigate the sidebar: Dashboard, Products, Customers, Transactions, Geography, Overview, Daily, Monthly, Breakdown, Admin and Performance. Use the top-bar icon to toggle dark/light mode — the choice persists across reloads.
+Open `http://localhost:3000`. You are routed to `/login`; sign in (or register) and land on the dashboard. From there:
 
-The client reads the API base URL from `VITE_BASE_URL` (see `client/.env`); the server reads `MONGODB_URL`, `PORT` (default `5001`), `CLIENT_ORIGIN` and `NODE_ENV` (see `server/.env.example`).
+- Browse the sidebar — Dashboard, Products, Customers, Transactions, Geography, Overview, Daily, Monthly, Breakdown, Admin and Performance — or jump to a page from the header search.
+- On **Products**, an `admin` / `superadmin` account sees Add / Edit / Delete controls; a `user` account sees the catalogue read-only (and mutation requests are rejected with `403`).
+- Use **Download Reports** on the dashboard to export the recent transactions as CSV.
+- Use the settings gear to see the signed-in account and toggle dark / light mode.
+
+Configuration is validated at startup. The client reads `VITE_BASE_URL` (see `client/.env`); the server reads `MONGODB_URL`, `PORT` (default `5001`), `CLIENT_ORIGIN` (comma-separated allow-list), `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, the token TTLs, and the cookie / proxy settings (see `server/.env.example`).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -142,21 +153,35 @@ The client reads the API base URL from `VITE_BASE_URL` (see `client/.env`); the 
 
 ```bash
 cd server
-bun run test        # Vitest + supertest (in-memory MongoDB)
+bun test            # bun:test + supertest (in-memory MongoDB)
 bun run typecheck   # tsc --noEmit
 bun run lint        # oxlint
 ```
 
-The client is checked with `bun run typecheck`, `bun run lint` and `bun run build`.
+```bash
+cd client
+bun run test        # Vitest + React Testing Library
+bun run typecheck   # tsc --noEmit
+bun run lint        # oxlint
+bun run build       # production build
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Deployment
+
+The API is a plain HTTP server, so the same build runs anywhere. A [`server/Dockerfile`](server/Dockerfile) based on `oven/bun` produces a single container image (Bun runs the TypeScript directly — no build step). The intended near-zero-cost target is AWS Lambda via the [AWS Lambda Web Adapter](https://github.com/awslabs/aws-lambda-web-adapter) on that image, with MongoDB Atlas M0 for data and S3 + CloudFront for the static front end. The same image also runs on App Runner, ECS, EC2 or any container host. Cookies and CORS are driven entirely by environment variables, so the identical build serves same-site or cross-site by configuration alone.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Roadmap
 
-- [ ] Authentication and role-based access
-- [ ] CI pipeline (typecheck, lint, tests on push)
-- [ ] Dockerfile and compose for local MongoDB
-- [ ] Front-end component tests
+- [ ] User-management UI for `superadmin`
+- [ ] Customers & Transactions CRUD (replicating the Products exemplar)
+- [ ] AWS deployment (Lambda + Atlas + CloudFront) and infrastructure-as-code
+- [ ] CI pipeline (typecheck, lint and tests on push)
+- [ ] Expanded front-end component tests
+- [ ] AI-assisted insights
 
 See the [open issues](https://github.com/omunite215/Project_MERN-Dashboard/issues) for a full list of proposed features and known issues.
 
@@ -250,18 +275,20 @@ Project link: [https://github.com/omunite215/Project_MERN-Dashboard](https://git
 [TR-url]: https://tanstack.com/router
 [Zustand-badge]: https://img.shields.io/badge/Zustand-2D3748?style=for-the-badge&logo=react&logoColor=white
 [Zustand-url]: https://zustand-demo.pmnd.rs
+[zod-badge]: https://img.shields.io/badge/Zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white
+[zod-url]: https://zod.dev
 [GSAP-badge]: https://img.shields.io/badge/GSAP-88CE02?style=for-the-badge&logo=greensock&logoColor=white
 [GSAP-url]: https://gsap.com
 [Bun-badge]: https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white
 [Bun-url]: https://bun.sh
-[Node-badge]: https://img.shields.io/badge/Node.js-5FA04E?style=for-the-badge&logo=nodedotjs&logoColor=white
-[Node-url]: https://nodejs.org
 [Express-badge]: https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white
 [Express-url]: https://expressjs.com
 [MongoDB-badge]: https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white
 [MongoDB-url]: https://www.mongodb.com
 [Mongoose-badge]: https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white
 [Mongoose-url]: https://mongoosejs.com
+[JWT-badge]: https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white
+[JWT-url]: https://jwt.io
 [Vitest-badge]: https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white
 [Vitest-url]: https://vitest.dev
 [oxlint-badge]: https://img.shields.io/badge/oxlint-1B2A4A?style=for-the-badge&logo=oxc&logoColor=white
