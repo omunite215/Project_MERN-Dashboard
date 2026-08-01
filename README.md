@@ -201,7 +201,7 @@ Contributions make the open-source community a great place to learn and build. A
 
 ## License
 
-Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
+Distributed under the MIT License — Copyright © 2026 Om Patel. See [`LICENSE`](LICENSE) for the full text.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
