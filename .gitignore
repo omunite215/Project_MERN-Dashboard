@@ -1,0 +1,10 @@
+# Local planning / design artifacts — not published
+docs/
+.superpowers/
+
+# Environment files (never commit real secrets)
+.env
+**/.env
+
+# OS / editor cruft
+.DS_Store
