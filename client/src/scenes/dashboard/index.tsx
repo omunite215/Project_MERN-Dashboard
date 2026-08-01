@@ -23,6 +23,7 @@ import { useDashboard } from "@/api/queries";
 import type { Transaction } from "@/api/types";
 import AsyncState from "@/components/AsyncState";
 import { useStaggerIn } from "@/hooks/useStaggerIn";
+import { downloadCsv } from "@/utils/exportCsv";
 
 const columns: GridColDef<Transaction>[] = [
   { field: "_id", headerName: "ID", flex: 1 },
@@ -49,6 +50,21 @@ export default function Dashboard() {
   const { data, isLoading, error } = useDashboard();
   const gridRef = useStaggerIn(".stat-in");
 
+  const handleDownloadReport = () => {
+    const rows = (data?.transactions ?? []).map((t) => [
+      t._id,
+      t.userId,
+      t.createdAt,
+      t.products.length,
+      Number(t.cost).toFixed(2),
+    ]);
+    downloadCsv(
+      `dashboard-transactions-${new Date().toISOString().slice(0, 10)}.csv`,
+      ["ID", "User ID", "Created At", "# Products", "Cost"],
+      rows
+    );
+  };
+
   if (error) {
     return (
       <Box sx={{ m: "1.5rem 2.5rem" }}>
@@ -68,6 +84,8 @@ export default function Dashboard() {
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
         <Box>
           <Button
+            onClick={handleDownloadReport}
+            disabled={!data}
             sx={{
               backgroundColor: theme.palette.secondary.light,
               color: theme.palette.background.alt,

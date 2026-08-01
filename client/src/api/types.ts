@@ -29,4 +29,8 @@ export interface Sales {
 export interface DashboardStats extends Sales {
   thisMonthStats: MonthlyDatum; todayStats: DailyDatum; transactions: Transaction[];
 }
-export interface UserPerformance { user: User & { affiliateStats: unknown }; sales: Transaction[] }
+export interface UserPerformance {
+  user: User & { affiliateStats?: unknown };
+  sales: Transaction[];
+  source: "affiliate" | "transactions";
+}

@@ -30,8 +30,15 @@ describe("GET /management/performance/:id", () => {
     const res = await request(makeApp()).get("/management/performance/bad").set("Authorization", `Bearer ${token}`);
     expect(res.status).toBe(400);
   });
-  it("404s when the user has no stats", async () => {
+  it("404s when the user does not exist", async () => {
     const res = await request(makeApp()).get(`/management/performance/${new mongoose.Types.ObjectId()}`).set("Authorization", `Bearer ${token}`);
     expect(res.status).toBe(404);
+  });
+  it("200s with empty sales (and no password) when the user exists but has no affiliate stats", async () => {
+    const user = await User.create({ name: "Solo", email: "solo@x.co", password: "secret12" });
+    const res = await request(makeApp()).get(`/management/performance/${user._id}`).set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(200);
+    expect(res.body.sales).toEqual([]);
+    expect(res.body.user.password).toBeUndefined();
   });
 });

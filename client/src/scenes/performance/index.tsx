@@ -43,20 +43,35 @@ export default function Performance() {
       />
       <AsyncState isLoading={isLoading} error={error} data={data}>
         {(perf) => {
+          const isFallback = perf.source === "transactions";
           const count = perf.sales.length;
-          const revenue = perf.sales.reduce(
+          const total = perf.sales.reduce(
             (sum, t) => sum + Number(t.cost || 0),
             0
           );
-          const aov = count ? revenue / count : 0;
+          const aov = count ? total / count : 0;
           const cards = [
-            { label: "Affiliate Sales", value: count.toLocaleString() },
-            { label: "Total Revenue", value: currency(revenue) },
+            {
+              label: isFallback ? "Your Transactions" : "Affiliate Sales",
+              value: count.toLocaleString(),
+            },
+            {
+              label: isFallback ? "Total Spent" : "Total Revenue",
+              value: currency(total),
+            },
             { label: "Avg Order Value", value: currency(aov) },
           ];
 
           return (
             <>
+              {isFallback && (
+                <Typography
+                  sx={{ mt: "1rem", color: theme.palette.secondary[300] }}
+                >
+                  No affiliate sales for your account yet — showing your own
+                  purchase transactions instead.
+                </Typography>
+              )}
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", mt: "1rem" }}>
                 {cards.map((c) => (
                   <Box
